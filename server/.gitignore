@@ -1,8 +1,9 @@
 ﻿# Ignored files from the backend
 
 # Preference files
-.idea
+.idea/*
+.DS_Store
 
 # Build Files
-bin/*
-obj/*
+*/bin/*
+*/obj/*
