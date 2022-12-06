@@ -1,0 +1,8 @@
+﻿# Ignored files from the backend
+
+# Preference files
+.idea
+
+# Build Files
+bin/*
+obj/*
