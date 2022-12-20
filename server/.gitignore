@@ -2,8 +2,13 @@
 
 # Preference files
 .idea/*
+.vs/*
 .DS_Store
+
 
 # Build Files
 */bin/*
 */obj/*
+
+# Resharper User Settings
+*.sln.DotSettings.user
