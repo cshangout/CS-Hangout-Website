@@ -12,3 +12,6 @@
 
 # Resharper User Settings
 *.sln.DotSettings.user
+
+# Settings files
+*/Properties/launchSettings.json
