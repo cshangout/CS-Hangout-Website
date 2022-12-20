@@ -1,30 +1,36 @@
-# CS Hangout Website Project
+# Welcome!
+Welcome to the CS-Hangout-Website project!
 
-## New User Guide
+This project is designed to give SNHU students exposure to a variety of "real world" programming experiences. While the end product will be useful to current and future students, the primary goal is to give contributors the opportunity to learn what it is like to work on a software development team. Additionally, this repository will remain public so you can reference it on your resumes and discuss it in future interviews.
 
-Welcome to the CS Hangout Website project! Whether you are here to browse or contribute, glad you made it!  
-If you are just here to browse or run the program locally, check out the wiki page entitled "Running The Program".
-If you are here to contribute, take a look below at our contribution guidelines, our board to see what stories
-are needing to be worked, then dive right in. Happy coding!
+This project has a low barrier for entry and will be accessible to anyone who has the desire to learn. The stack may be new to you, or the concepts may be foreign, but I will make sure to work with anyone who wants to contribute to help you gain the skills necessary to make this project a success.
 
-### New User Contribution Guidelines
+I look forward to working with all of you and hope we all learn from this process!
 
-To help guarantee the integrity and efficiency of the project, we have gathered some documentation that all new developers should
-read before contributing. These docs have been marked required and suggested and all can be found in the repo's wiki. Required will help you
-avoid having pull requests denied. Suggested will make you a better programmer.
+ -thegunnersdream
 
-Once you have completed the reading, head over to the board and see what stories are waiting to be worked, grab one, and dive in.
+# Where should I go?
+New visitors/future contributors should check out the following pages to get started:
 
-#### Required Documentation
+## Project Goals
+* MVP Goals
+  * https://github.com/cshangout/CS-Hangout-Website/wiki/MVP-Goals
+## Local Setup
+* Frontend Setup
+  * https://github.com/cshangout/CS-Hangout-Website/wiki/React-Project-Onboarding
+* Backend Setup
+  * https://github.com/cshangout/CS-Hangout-Website/wiki/.NET-Project-Onboarding
 
-These docs should be read before contributing:
+## Contribution Guidelines and Procedure
+* Coding Guidelines
+  * https://github.com/cshangout/CS-Hangout-Website/wiki/Coding-Guidelines
+* Branching Strategy and Pull Requests
+  * https://github.com/cshangout/CS-Hangout-Website/wiki/Branch-Strategy-and-Pull-Request-Process
+* Getting Started
+* MVP Goals
 
--   MVP Goal
--   Stack Details
--   Coding Guidelines
--   Pull Request Process
-
-#### Suggested Documentation
-
--   SOLID Principles
--   Unit Testing Best Practices
+## Coding Best Practices
+* SOLID Principles
+  * https://github.com/cshangout/CS-Hangout-Website/wiki/SOLID-Principles
+* Unit Testing Best Practices
+  * https://github.com/cshangout/CS-Hangout-Website/wiki/Unit-Testing-Best-Practices
