@@ -1,28 +1,14 @@
-import logo from './logo.svg';
-import Button from 'react-bootstrap/Button';
+// Component Imports
+import Header from "./Header/Header";
+import AuthLandingPage from "./Authentication/AuthLandingPage";
+
+// Style imports
 import './App.css';
-
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <Button variant="primary" size="lg">Bootstrap Button</Button>
-        <Button variant="secondary">Bootstrap Button 2</Button>
-      </header>
+    <div className="App-Body-Layout">
+      <Header />
+      <AuthLandingPage />
     </div>
-  );
+  )
 }
-
-export default App;
