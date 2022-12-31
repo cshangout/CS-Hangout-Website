@@ -22,9 +22,9 @@ export default function Login() {
                                 <Form>
                                     <Form.Group className='mb-3' controlId='user'>
                                         <Form.Label htmlFor='email'>Email Address</Form.Label>
-                                        <Form.Control type='email' placeholder='someone@example.com' maxLength={40} id='email' />
+                                        <Form.Control type='email' placeholder='someone@example.com' maxLength={40} id='email' required/>
                                         <Form.Label htmlFor='password'>Password</Form.Label>
-                                        <Form.Control type='password' placeholder='Enter Password' minLength={8} maxLength={24} id='password' />
+                                        <Form.Control type='password' placeholder='Enter Password' minLength={8} maxLength={24} id='password' required/>
                                         <Button variant="primary" type="submit">
                                             Submit
                                         </Button>
