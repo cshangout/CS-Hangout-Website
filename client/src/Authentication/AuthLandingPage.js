@@ -1,7 +1,7 @@
-
+import Login from '../Login/Login';
 
 export default function AuthLandingPage() {
     return (
-        <h1>Test</h1>
+        <Login />
     )
 }
