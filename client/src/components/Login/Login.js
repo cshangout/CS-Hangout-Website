@@ -32,7 +32,7 @@ export default function Login() {
                     <CardGroup>
                         <Card style={{ width: '18rem' }}>
                             <Card.Body>
-                                <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                                <Form noValidate validated={validated} onSubmit={handleSubmit} data-testid='valid-test'>
                                     <Form.Group className='mb-3'>
                                         <Form.Label htmlFor='email'>Email Address</Form.Label>
                                         <Form.Control type='email' placeholder='someone@example.com' maxLength={40} id='email' required data-testid='email-input' />
