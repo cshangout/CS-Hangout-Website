@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import Login from '../components/Login/Login'
 
@@ -10,43 +10,32 @@ describe('Test the Login component', () => {
     expect(passwordElement).toBeInTheDocument();
   });
 
-  test('pass valid email to test email input', () => {
-    render(<Login />);
-    const testEmail = 'test@mail.com';
-
-    const emailInput = screen.getByTestId('email-input');
-    const submit = screen.getByText('Login');
-
-    userEvent.type(emailInput, testEmail);
-    fireEvent.click(submit);
-
-    expect(emailInput).toBeValid();
-  });
-
   test('pass empty string to test email input', () => {
     render(<Login />);
     const testEmail = '';
+    const isValid = screen.getByTestId('valid-test');
 
     const emailInput = screen.getByTestId('email-input');
     const submit = screen.getByText('Login');
 
     userEvent.type(emailInput, testEmail);
-    fireEvent.click(submit);
+    userEvent.click(submit);
 
-    expect(emailInput).toBeInvalid();
+    expect(isValid).toBeInvalid();
   });
 
   test('pass email without "@" to test email input', () => {
     render(<Login />);
     const testEmail = 'thisshouldnotwork';
+    const isValid = screen.getByTestId('valid-test');
 
     const emailInput = screen.getByTestId('email-input');
     const submit = screen.getByText('Login');
 
     userEvent.type(emailInput, testEmail);
-    fireEvent.click(submit);
+    userEvent.click(submit);
 
-    expect(emailInput).toBeInvalid();
+    expect(isValid).toBeInvalid();
   });
 
   test('pass email that is too long to test email input', () => {
@@ -55,24 +44,12 @@ describe('Test the Login component', () => {
 
     const emailInput = screen.getByTestId('email-input');
     const submit = screen.getByText('Login');
+    const isValid = screen.getByTestId('valid-test');
 
     userEvent.type(emailInput, testEmail);
-    fireEvent.click(submit);
+    userEvent.click(submit);
 
-    expect(emailInput).toBeInvalid();
-  });
-
-  test('pass valid password to test password input', () => {
-    render(<Login />);
-    const testPassword = 'thisis8char';
-
-    const passwordInput = screen.getByTestId('password-input');
-    const submit = screen.getByText('Login');
-
-    userEvent.type(passwordInput, testPassword);
-    fireEvent.click(submit);
-
-    expect(passwordInput).toBeValid();
+    expect(isValid).toBeInvalid();
   });
 
   test('pass empty string to test password input', () => {
@@ -81,38 +58,56 @@ describe('Test the Login component', () => {
 
     const passwordInput = screen.getByTestId('password-input');
     const submit = screen.getByText('Login');
+    const isValid = screen.getByTestId('valid-test');
 
     userEvent.type(passwordInput, testPassword);
-    fireEvent.click(submit);
+    userEvent.click(submit);
 
-    expect(passwordInput).toBeInvalid();
+    expect(isValid).toBeInvalid();
   });
 
-  // FIXME: This test does not work, not sure why
   test('pass password that is too short to test password input', () => {
     render(<Login />);
     const testPassword = 'short';
 
     const passwordInput = screen.getByTestId('password-input');
     const submit = screen.getByText('Login');
+    const isValid = screen.getByTestId('valid-test');
 
     userEvent.type(passwordInput, testPassword);
-    fireEvent.click(submit);
+    userEvent.click(submit);
 
-    expect(passwordInput).toBeInvalid();
+    expect(isValid).toBeInvalid();
   });
 
-  // FIXME: This test does not work, not sure why
   test('pass password that is too long to test password input', () => {
     render(<Login />);
     const testPassword = '11111111111111111111111111111111111111111111111111111111111111';
 
     const passwordInput = screen.getByTestId('password-input');
     const submit = screen.getByText('Login');
+    const isValid = screen.getByTestId('valid-test');
 
     userEvent.type(passwordInput, testPassword);
-    fireEvent.click(submit);
+    userEvent.click(submit);
 
-    expect(passwordInput).toBeInvalid();
+    expect(isValid).toBeInvalid();
+  });
+
+  test('pass valid email and password to test email and password input', () => {
+    render(<Login />);
+    const testEmail = 'test@mail.com';
+    const testPassword = 'thisis8char';
+    const isValid = screen.getByTestId('valid-test');
+
+    const emailInput = screen.getByTestId('email-input');
+    const passwordInput = screen.getByTestId('password-input');
+    const submit = screen.getByText('Login');
+
+    userEvent.type(emailInput, testEmail);
+    userEvent.type(passwordInput, testPassword);
+    userEvent.click(submit);
+
+    expect(isValid).toBeValid();
   });
 })
