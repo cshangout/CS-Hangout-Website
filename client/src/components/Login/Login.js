@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Login.js'
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -9,8 +9,21 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 
+
 // FIXME: Review formating of extra columns
 export default function Login() {
+    const [validated, setValidated] = useState(false);
+
+    const handleSubmit = (e) => {
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        setValidated(true);
+    }
+
     return (
         <Container fluid>
             <Row>
@@ -19,16 +32,20 @@ export default function Login() {
                     <CardGroup>
                         <Card style={{ width: '18rem' }}>
                             <Card.Body>
-                                <Form>
+                                <Form noValidate validated={validated} onSubmit={handleSubmit}>
                                     <Form.Group className='mb-3'>
                                         <Form.Label htmlFor='email'>Email Address</Form.Label>
-                                        <Form.Control type='email' placeholder='someone@example.com' maxLength={40} id='email' required/>
-                                        <Form.Label htmlFor='password'>Password</Form.Label>
-                                        <Form.Control type='password' placeholder='Enter Password' minLength={8} maxLength={24} id='password' required/>
-                                        <Button variant="primary" type="submit">
-                                            Login
-                                        </Button>
+                                        <Form.Control type='email' placeholder='someone@example.com' maxLength={40} id='email' required data-testid='email-input' />
+                                        <Form.Control.Feedback type='invalid' data-testid='email-err-msg'>Please enter a valid email.</Form.Control.Feedback>
                                     </Form.Group>
+                                    <Form.Group className='mb-3'>
+                                        <Form.Label htmlFor='password'>Password</Form.Label>
+                                        <Form.Control type='password' placeholder='Enter Password' minLength={8} maxLength={24} id='password' required data-testid='password-input' />
+                                        <Form.Control.Feedback type='invalid' data-testid='password-err-msg'>Please enter a password with a minimum of 8 chars.</Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Button variant="primary" type="submit">
+                                        Login
+                                    </Button>
                                 </Form>
                             </Card.Body>
                         </Card>
