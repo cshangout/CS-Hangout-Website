@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
-import Login from '../src/Login/Login'
+import userEvent from '@testing-library/user-event';
+import Login from '../Login/Login';
 
 
 describe('Test the Login component', () => {
@@ -13,9 +13,9 @@ describe('Test the Login component', () => {
   test('pass empty string to test email input', () => {
     render(<Login />);
     const testEmail = '';
-    const isValid = screen.getByTestId('valid-test');
+    const isValid = screen.getByTestId('login-form-validity-test');
 
-    const emailInput = screen.getByTestId('email-input');
+    const emailInput = screen.getByTestId('login-form-email-input');
     const submit = screen.getByText('Login');
 
     userEvent.type(emailInput, testEmail);
@@ -27,9 +27,9 @@ describe('Test the Login component', () => {
   test('pass email without "@" to test email input', () => {
     render(<Login />);
     const testEmail = 'thisshouldnotwork';
-    const isValid = screen.getByTestId('valid-test');
+    const isValid = screen.getByTestId('login-form-validity-test');
 
-    const emailInput = screen.getByTestId('email-input');
+    const emailInput = screen.getByTestId('login-form-email-input');
     const submit = screen.getByText('Login');
 
     userEvent.type(emailInput, testEmail);
@@ -42,9 +42,9 @@ describe('Test the Login component', () => {
     render(<Login />);
     const testEmail = '11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111@gmail.com';
 
-    const emailInput = screen.getByTestId('email-input');
+    const emailInput = screen.getByTestId('login-form-email-input');
     const submit = screen.getByText('Login');
-    const isValid = screen.getByTestId('valid-test');
+    const isValid = screen.getByTestId('login-form-validity-test');
 
     userEvent.type(emailInput, testEmail);
     userEvent.click(submit);
@@ -56,9 +56,9 @@ describe('Test the Login component', () => {
     render(<Login />);
     const testPassword = '';
 
-    const passwordInput = screen.getByTestId('password-input');
+    const passwordInput = screen.getByTestId('login-form-password-input');
     const submit = screen.getByText('Login');
-    const isValid = screen.getByTestId('valid-test');
+    const isValid = screen.getByTestId('login-form-validity-test');
 
     userEvent.type(passwordInput, testPassword);
     userEvent.click(submit);
@@ -70,9 +70,9 @@ describe('Test the Login component', () => {
     render(<Login />);
     const testPassword = 'short';
 
-    const passwordInput = screen.getByTestId('password-input');
+    const passwordInput = screen.getByTestId('login-form-password-input');
     const submit = screen.getByText('Login');
-    const isValid = screen.getByTestId('valid-test');
+    const isValid = screen.getByTestId('login-form-validity-test');
 
     userEvent.type(passwordInput, testPassword);
     userEvent.click(submit);
@@ -84,9 +84,9 @@ describe('Test the Login component', () => {
     render(<Login />);
     const testPassword = '11111111111111111111111111111111111111111111111111111111111111';
 
-    const passwordInput = screen.getByTestId('password-input');
+    const passwordInput = screen.getByTestId('login-form-password-input');
     const submit = screen.getByText('Login');
-    const isValid = screen.getByTestId('valid-test');
+    const isValid = screen.getByTestId('login-form-validity-test');
 
     userEvent.type(passwordInput, testPassword);
     userEvent.click(submit);
@@ -98,10 +98,10 @@ describe('Test the Login component', () => {
     render(<Login />);
     const testEmail = 'test@mail.com';
     const testPassword = 'thisis8char';
-    const isValid = screen.getByTestId('valid-test');
+    const isValid = screen.getByTestId('login-form-validity-test');
 
-    const emailInput = screen.getByTestId('email-input');
-    const passwordInput = screen.getByTestId('password-input');
+    const emailInput = screen.getByTestId('login-form-email-input');
+    const passwordInput = screen.getByTestId('login-form-password-input');
     const submit = screen.getByText('Login');
 
     userEvent.type(emailInput, testEmail);
