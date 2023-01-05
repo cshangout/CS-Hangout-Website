@@ -1,6 +1,6 @@
 // Component Imports
-import Header from "./components/Header/Header";
-import AuthLandingPage from "./components/Authentication/AuthLandingPage";
+import Header from "./Header/Header";
+import AuthLandingPage from "./Authentication/AuthLandingPage";
 
 // Style imports
 import './App.css';
