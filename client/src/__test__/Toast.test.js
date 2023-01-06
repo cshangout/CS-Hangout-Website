@@ -8,12 +8,12 @@ describe('Test the Toast component', () => {
         expect(toastElement).toBeInTheDocument();
     })
 
-    // FIXME: Figure out how to test color prop
     test('pass color to test color prop', () => {
         const testColor = 'danger';
+        const validColor = 'bg-danger'
         render(<Toast color = {testColor} />);
         const toastElement = screen.getByTestId('does-toast-render');
-        expect(toastElement.className).toBe(testColor);
+        expect(toastElement.classList.contains(validColor)).toBeTruthy();
     })
 
     test('pass message to test message prop' , () => {
