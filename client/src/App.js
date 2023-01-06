@@ -1,17 +1,28 @@
-// Component Imports
-import Header from "./Header/Header";
-import AuthLandingPage from "./Authentication/AuthLandingPage";
-
-// Style imports
+import logo from './logo.svg';
+import Button from 'react-bootstrap/Button';
 import './App.css';
-import {Container} from "react-bootstrap";
-export default function App() {
+
+function App() {
   return (
-      <div className="App-Body-Layout">
-          <Container fluid>
-              <Header />
-              <AuthLandingPage />
-          </Container>
-      </div>
-  )
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+        <Button variant="primary" size="lg">Bootstrap Button</Button>
+        <Button variant="secondary">Bootstrap Button 2</Button>
+      </header>
+    </div>
+  );
 }
+
+export default App;
