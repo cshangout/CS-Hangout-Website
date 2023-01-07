@@ -14,6 +14,9 @@ import Toast from '../Toast/Toast';
 // FIXME: Review formating of extra columns
 export default function Login() {
     const [validated, setValidated] = useState(false);
+    const [isHidden, setHidden] = useState(true);
+    const [color, setColor] = useState(null);
+    const [message, setMessage] = useState(null);
 
     const handleSubmit = (e) => {
         const form = e.currentTarget;
@@ -21,31 +24,41 @@ export default function Login() {
         if (form.checkValidity() === false) {
             e.preventDefault();
             e.stopPropagation();
-            handleErrors();
         }
-
         setValidated(true);
     }
 
-    // FIXME: Get toast component to render
-    function handleErrors() {
+    const handleErrors = (e) => {
         let username = document.getElementById('email').value;
         let password = document.getElementById('password').value;
+        if (isHidden) {
+            setHidden(!isHidden);
+        }
         if (username === '' && password) {
-            console.log(ToastConstants.loginErrorMsg.usernameEmpty); 
+            console.log(ToastConstants.loginErrorMsg.usernameEmpty);
+            setColor(ToastConstants.color.error);
+            setMessage(ToastConstants.loginErrorMsg.usernameEmpty);  
         }
         if (password === '' && username) {
             console.log(ToastConstants.loginErrorMsg.passwordEmpty);
+            setColor(ToastConstants.color.error);
+            setMessage(ToastConstants.loginErrorMsg.passwordEmpty);      
         }
         if (password === '' && username === ''){
             console.log(ToastConstants.loginErrorMsg.bothFieldsEmpty);
+            setColor(ToastConstants.color.error);
+            setMessage(ToastConstants.loginErrorMsg.bothFieldsEmpty);      
         }
         if (password && username) {
             console.log(ToastConstants.loginErrorMsg.bothFieldsFilled);
+            setColor(ToastConstants.color.error);
+            setMessage(ToastConstants.loginErrorMsg.bothFieldsFilled);  
         }
     }
 
     return (
+    <div>
+        { !isHidden ? <Toast color={color} message={message}/> : null}
         <Container fluid>
             <Row>
                 <Col />
@@ -89,7 +102,7 @@ export default function Login() {
                                         >Please enter a password with a minimum of 8 chars.
                                         </Form.Control.Feedback>
                                     </Form.Group>
-                                    <Button variant="primary" type="submit">
+                                    <Button onClick={handleErrors} variant="primary" type="submit">
                                         Login
                                     </Button>
                                 </Form>
@@ -100,5 +113,6 @@ export default function Login() {
                 <Col />
             </Row>
         </Container>
+    </div>
     )
 }
