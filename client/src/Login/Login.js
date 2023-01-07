@@ -35,22 +35,18 @@ export default function Login() {
             setHidden(!isHidden);
         }
         if (username === '' && password) {
-            console.log(ToastConstants.loginErrorMsg.usernameEmpty);
             setColor(ToastConstants.color.error);
             setMessage(ToastConstants.loginErrorMsg.usernameEmpty);  
         }
         if (password === '' && username) {
-            console.log(ToastConstants.loginErrorMsg.passwordEmpty);
             setColor(ToastConstants.color.error);
             setMessage(ToastConstants.loginErrorMsg.passwordEmpty);      
         }
         if (password === '' && username === ''){
-            console.log(ToastConstants.loginErrorMsg.bothFieldsEmpty);
             setColor(ToastConstants.color.error);
             setMessage(ToastConstants.loginErrorMsg.bothFieldsEmpty);      
         }
         if (password && username) {
-            console.log(ToastConstants.loginErrorMsg.bothFieldsFilled);
             setColor(ToastConstants.color.error);
             setMessage(ToastConstants.loginErrorMsg.bothFieldsFilled);  
         }
