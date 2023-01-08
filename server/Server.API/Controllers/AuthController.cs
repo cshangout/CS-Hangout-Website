@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using Server.API.Controllers.Interfaces;
+using Server.API.DTOs;
 
 namespace Server.API.Controllers;
 
@@ -6,15 +9,17 @@ namespace Server.API.Controllers;
 /// Authentication Controller
 /// </summary>
 [ApiController]
-[Route("api/auth")]
-public class Authentication : ControllerBase
+[Route("api/[controller]")]
+public class AuthController : BaseController, IAuthController
 {
+    private readonly ILogger _logger;
+
     /// <summary>
     /// Authentication Constructor
     /// </summary>
-    public Authentication()
+    public AuthController(ILogger logger)
     {
-        
+        _logger = logger.ForContext<AuthController>();
     }
     
     /// <summary>
@@ -22,9 +27,10 @@ public class Authentication : ControllerBase
     /// </summary>
     /// <returns>ActionResult</returns>
     [HttpPost]
-    public ActionResult AuthenticateUser()
+    public async Task<ActionResult<UserDto>> AuthenticateUser(LoginDto loginDto)
     {
         // Create logic for Authenticating a user
+        _logger.Debug("Authentication Started");
         return Ok();
     }
 }

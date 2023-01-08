@@ -1,4 +1,5 @@
 using Autofac.Extensions.DependencyInjection;
+using Serilog;
 
 namespace Server.API;
 
@@ -9,7 +10,10 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var host = Host.CreateDefaultBuilder(args)
+        CreateHostBuilder(args).Build().Run();
+    }
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .ConfigureWebHostDefaults(webHostBuilder =>
             {
@@ -17,9 +21,7 @@ public class Program
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseIISIntegration()
                     .UseStartup<Startup>();
+                
             })
-            .Build();
-
-        host.Run();
-    }
+            .UseSerilog();
 }
