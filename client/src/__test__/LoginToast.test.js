@@ -89,8 +89,8 @@ describe('Test the Toast component within the Login component', () => {
     userEvent.type(passwordInput, testPassword);
     userEvent.click(submit);
 
-    const toastMessage = screen.queryByText(ToastConstants.loginErrorMsg.bothFieldsFilled);
-    expect(toastMessage.innerHTML).toBe(ToastConstants.loginErrorMsg.bothFieldsFilled);
+    const toastMessage = screen.queryByText(ToastConstants.loginErrorMsg.unauthorizedLogin);
+    expect(toastMessage.innerHTML).toBe(ToastConstants.loginErrorMsg.unauthorizedLogin);
   });
 
 })
