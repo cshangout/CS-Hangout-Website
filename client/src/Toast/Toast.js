@@ -6,6 +6,10 @@ import ToastContainer from 'react-bootstrap/ToastContainer';
  * Toast component takes the props: 
  * @param color
  * @param message
+ * @param show
+ * @param autohide
+ * @param delay
+ * @param onClose
 */
 export default function ToastAlertComponent({ color, message, show, autohide, delay, onClose }) {
     return (
