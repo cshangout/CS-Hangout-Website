@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import './Login.js'
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -20,9 +20,6 @@ export default function Login() {
     const [inputEmail, setEmail] = useState('');
     const [inputPassword, setPassword] = useState('');
 
-    const usernameRef = useRef();
-    const passwordRef = useRef();
-
     const handleSubmit = (e) => {
         const form = e.currentTarget;
 
@@ -34,8 +31,8 @@ export default function Login() {
     }
 
     const handleErrors = (e) => {
-        const username = usernameRef.current.value;
-        const password = passwordRef.current.value;
+        const username = inputEmail;
+        const password = inputPassword;
 
         if (username === '' && password) {
             setColor(ToastConstants.color.error);
@@ -82,8 +79,6 @@ export default function Login() {
                                             placeholder={LoginConstants.email.placeholder}
                                             maxLength={40} id='email'
                                             required data-testid='login-form-email-input' 
-                                            ref={usernameRef}
-                                            value={inputEmail}
                                             onChange={(e) => setEmail(e.target.value)}/>
                                         <Form.Control.Feedback
                                             type='invalid'
@@ -102,8 +97,6 @@ export default function Login() {
                                             id='password'
                                             required
                                             data-testid='login-form-password-input' 
-                                            ref={passwordRef}
-                                            value={inputPassword}
                                             onChange={(e) => setPassword(e.target.value)}/>
                                         <Form.Control.Feedback
                                             type='invalid'
