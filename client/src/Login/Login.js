@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './Login.js'
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -14,9 +14,14 @@ import Toast from '../Toast/Toast';
 // FIXME: Review formating of extra columns
 export default function Login() {
     const [validated, setValidated] = useState(false);
-    const [isHidden, setHidden] = useState(true);
+    const [show, setShow] = useState(false);
     const [color, setColor] = useState(null);
     const [message, setMessage] = useState(null);
+    const [inputEmail, setEmail] = useState('');
+    const [inputPassword, setPassword] = useState('');
+
+    const usernameRef = useRef();
+    const passwordRef = useRef();
 
     const handleSubmit = (e) => {
         const form = e.currentTarget;
@@ -29,32 +34,34 @@ export default function Login() {
     }
 
     const handleErrors = (e) => {
-        let username = document.getElementById('email').value;
-        let password = document.getElementById('password').value;
-        if (isHidden) {
-            setHidden(!isHidden);
-        }
+        const username = usernameRef.current.value;
+        const password = passwordRef.current.value;
+
         if (username === '' && password) {
             setColor(ToastConstants.color.error);
-            setMessage(ToastConstants.loginErrorMsg.usernameEmpty);  
+            setMessage(ToastConstants.loginErrorMsg.usernameEmpty);
+            setShow(true);
         }
         if (password === '' && username) {
             setColor(ToastConstants.color.error);
-            setMessage(ToastConstants.loginErrorMsg.passwordEmpty);      
+            setMessage(ToastConstants.loginErrorMsg.passwordEmpty);
+            setShow(true);      
         }
         if (password === '' && username === ''){
             setColor(ToastConstants.color.error);
-            setMessage(ToastConstants.loginErrorMsg.bothFieldsEmpty);      
+            setMessage(ToastConstants.loginErrorMsg.bothFieldsEmpty);
+            setShow(true);      
         }
         if (password && username) {
             setColor(ToastConstants.color.error);
-            setMessage(ToastConstants.loginErrorMsg.bothFieldsFilled);  
+            setMessage(ToastConstants.loginErrorMsg.unauthorizedLogin);  
+            setShow(true);
         }
     }
 
     return (
     <div>
-        { !isHidden ? <Toast color={color} message={message}/> : null}
+        <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide={true} color={color} message={message}/>
         <Container fluid>
             <Row>
                 <Col />
@@ -74,7 +81,10 @@ export default function Login() {
                                             type='email'
                                             placeholder={LoginConstants.email.placeholder}
                                             maxLength={40} id='email'
-                                            required data-testid='login-form-email-input' />
+                                            required data-testid='login-form-email-input' 
+                                            ref={usernameRef}
+                                            value={inputEmail}
+                                            onChange={(e) => setEmail(e.target.value)}/>
                                         <Form.Control.Feedback
                                             type='invalid'
                                             data-testid='email-err-msg'
@@ -91,7 +101,10 @@ export default function Login() {
                                             maxLength={LoginConstants.password.maxLength}
                                             id='password'
                                             required
-                                            data-testid='login-form-password-input' />
+                                            data-testid='login-form-password-input' 
+                                            ref={passwordRef}
+                                            value={inputPassword}
+                                            onChange={(e) => setPassword(e.target.value)}/>
                                         <Form.Control.Feedback
                                             type='invalid'
                                             data-testid='password-err-msg'
