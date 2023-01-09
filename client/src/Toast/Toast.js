@@ -7,10 +7,11 @@ import ToastContainer from 'react-bootstrap/ToastContainer';
  * @param color
  * @param message
 */
-export default function ToastAlertComponent({ color, message }) {
+export default function ToastAlertComponent({ color, message, show, autohide, delay, onClose }) {
     return (
         <ToastContainer position ='top-center'>
-            <Toast bg={color} data-testid='does-toast-render'>
+            <Toast bg={color} data-testid='does-toast-render' show={show} 
+            autohide={autohide} delay={delay} onClose={onClose}>
                 <Toast.Body>{message}</Toast.Body>
             </Toast>
         </ToastContainer>
