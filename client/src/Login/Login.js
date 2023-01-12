@@ -13,7 +13,6 @@ import Toast from '../Toast/Toast';
 
 // FIXME: Review formating of extra columns
 export default function Login() {
-    const [validated, setValidated] = useState(false);
     const [show, setShow] = useState(false);
     const [color, setColor] = useState(null);
     const [message, setMessage] = useState(null);
@@ -26,12 +25,21 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         const form = e.currentTarget;
+        e.preventDefault();
 
-        if (form.checkValidity() === false) {
-            e.preventDefault();
-            e.stopPropagation();
+        let tempVarToActAsSuccessfulRequest = false;
+        let responseCode = 401;
+
+        const checkValid = () => {
+            if (tempVarToActAsSuccessfulRequest) {
+                console.log("Route to homepage")
+            }
+            else {
+                e.stopPropagation();
+                handleErrors(responseCode);
+            }
         }
-        setValidated(true);
+        checkValid();
     }
 
     const onEmailChange = (e) => {
@@ -75,26 +83,15 @@ export default function Login() {
         isFormValid()
     }, [usernameValid, passwordValid, email, password])
 
-    const handleErrors = () => {
-        if (email === '') {
-            setColor(ToastConstants.color.error);
-            setMessage(ToastConstants.loginErrorMsg.usernameEmpty);
-            setShow(true);
-        }
-        else if (password === '') {
-            setColor(ToastConstants.color.error);
-            setMessage(ToastConstants.loginErrorMsg.passwordEmpty);
-            setShow(true);
-        }
-        else if (password === '' && email === '') {
-            setColor(ToastConstants.color.error);
-            setMessage(ToastConstants.loginErrorMsg.bothFieldsEmpty);
-            setShow(true);
-        }
-        else if (password && email) {
-            setColor(ToastConstants.color.error);
-            setMessage(ToastConstants.loginErrorMsg.unauthorizedLogin);
-            setShow(true);
+    const handleErrors = (responseCode) => {
+        switch (responseCode) {
+            case 401: 
+                setColor(ToastConstants.color.error);
+                setMessage(ToastConstants.loginErrorMsg.unauthorizedLogin);
+                setShow(true);
+                break;
+            default:
+                console.log("Unhandled error code");
         }
     }
 
@@ -116,7 +113,6 @@ export default function Login() {
                                 <Card.Body>
                                     <Form
                                         noValidate
-                                        validated={validated}
                                         onSubmit={handleSubmit}
                                         data-testid='login-form-validity-test'>
                                         <Form.Group className='mb-3'>
@@ -150,7 +146,7 @@ export default function Login() {
                                             >Please enter a password with a minimum of 8 chars.
                                             </Form.Control.Feedback>
                                         </Form.Group>
-                                        <Button onClick={handleErrors} variant="primary" type="submit" disabled={!loginInfoValid}>
+                                        <Button onSubmit={handleSubmit} variant="primary" type="submit" disabled={!loginInfoValid}>
                                             Login
                                         </Button>
                                     </Form>
