@@ -35,7 +35,6 @@ export default function Login() {
                 console.log("Route to homepage")
             }
             else {
-                e.stopPropagation();
                 handleErrors(responseCode);
             }
         }
@@ -85,13 +84,24 @@ export default function Login() {
 
     const handleErrors = (responseCode) => {
         switch (responseCode) {
-            case 401: 
+            case 400:
+                setColor(ToastConstants.color.error);
+                setMessage(ToastConstants.serverErrorMsg.badRequest);
+                setShow(true);
+                break;
+            case 401:
                 setColor(ToastConstants.color.error);
                 setMessage(ToastConstants.loginErrorMsg.unauthorizedLogin);
                 setShow(true);
                 break;
+            case 500:
+                setColor(ToastConstants.color.error);
+                setMessage(ToastConstants.serverErrorMsg.serverDown);
+                setShow(true);
+                break;
             default:
                 console.log("Unhandled error code");
+                break;
         }
     }
 
@@ -146,7 +156,7 @@ export default function Login() {
                                             >Please enter a password with a minimum of 8 chars.
                                             </Form.Control.Feedback>
                                         </Form.Group>
-                                        <Button onSubmit={handleSubmit} variant="primary" type="submit" disabled={!loginInfoValid}>
+                                        <Button variant="primary" type="submit" disabled={!loginInfoValid}>
                                             Login
                                         </Button>
                                     </Form>
