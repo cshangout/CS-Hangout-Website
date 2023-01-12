@@ -18,7 +18,13 @@ export const ToastConstants = {
         passwordEmpty: "Password field is empty. Please enter a password.",
         usernameEmpty: "Username field is empty. Please enter a username.",
     },
+    serverErrorMsg: {
+        badRequest: "Bad request. Invalid request.",
+        serverDown: "Servor error. Server is potentially down or not responding.",
+        default: "An error has occured.",
+    },
     color: {
+        success: "success",
         error: "danger",
     }
 }
