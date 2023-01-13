@@ -1,10 +1,9 @@
-﻿using System.Timers;
+﻿using System.Reflection;
 using Common.Logging;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using MySql.EntityFrameworkCore.Extensions;
 using Serilog;
-using Serilog.Events;
 using Server.API.Controllers;
 using Server.API.Controllers.Interfaces;
 using Server.Infrastructure.Data;
@@ -31,16 +30,7 @@ public class Startup
         
         RegisterEnvironmentSettings(services);
         RegisterDIServices(services);
-
-        //Setup CORS Policy
-/*        string[] origins = Configuration["CORSOrigin"].Split(",");
-        var corsBuilder = new CorsPolicyBuilder()
-             .AllowAnyHeader()
-             .AllowAnyMethod()
-             .WithOrigins(origins)
-             .AllowCredentials();
-                 services.AddCors(options => { options.AddPolicy("SiteCorsPolicy", corsBuilder.Build()); });*/
-
+        
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
@@ -58,13 +48,15 @@ public class Startup
         // FIXME: Redesign logging middleware for custom logging
         app.UseSerilogRequestLogging();
         app.UseHttpsRedirection();
+
         string[] origins = Configuration["CORSOrigin"].Split(",");
         app.UseCors(builder =>
         {
-            builder.AllowAnyHeader()
-             .AllowAnyMethod()
-             .WithOrigins(origins)
-             .AllowCredentials();
+            builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithOrigins(origins)
+                .AllowCredentials();
         });
         app.UseRouting();
         app.UseAuthorization();
@@ -77,18 +69,18 @@ public class Startup
 
     public void RegisterDIServices(IServiceCollection services)
     {
-        //var _connString = $"Data Source={server};Initial Catalog={db};User ID={user};Password={pass};";
-        //Register DB Context
-        // services.AddEntityFrameworkMySQL().AddDbContext<DataContext>(options =>
-        // {
-        //     options.UseMySQL(_connString);
-        // });
-        //
+        var test = Configuration["ConnectionStrings:MySqlDbConnectionString"];
+         // Register DB Context
+         services.AddEntityFrameworkMySQL().AddDbContext<DataContext>(options =>
+         {
+             options.UseMySQL();
+         });
+        
         services.AddScoped<IAuthController, AuthController>();
         
         //TODO: Review Singleton requirements for context
-        //services.AddSingleton<IDataContext, DataContext>();
-        //services.AddSingleton<IUserRepository, UserRepository>();
+        services.AddSingleton<IDataContext, DataContext>();
+        services.AddSingleton<IUserRepository, UserRepository>();
     }
 
     /// <summary>
@@ -98,9 +90,11 @@ public class Startup
     private void RegisterEnvironmentSettings(IServiceCollection services)
     {
         var configs = new ConfigurationBuilder()
+            .AddUserSecrets<Program>(true)
             .AddJsonFile("appsettings.json")
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
             .AddEnvironmentVariables()
+            
             .Build();
         
         services.RegisterSerilog(configs);

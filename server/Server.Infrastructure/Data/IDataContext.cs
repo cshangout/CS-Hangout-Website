@@ -6,6 +6,4 @@ namespace Server.Infrastructure.Data;
 public interface IDataContext : IDisposable
 {
     DbSet<User> Users { get; set; }
-
-    public void SaveChanges();
 }

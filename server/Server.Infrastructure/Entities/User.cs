@@ -8,6 +8,7 @@ public class User : IEntity
     [Required]
     [StringLength(40, MinimumLength = 5)]
     public string UserName { get; set; }
+    public string Password { get; set; }
     // [Required]
     // public byte[] PasswordHash { get; set; }
     // [Required]

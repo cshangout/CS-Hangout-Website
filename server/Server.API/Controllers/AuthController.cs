@@ -15,15 +15,15 @@ namespace Server.API.Controllers;
 public class AuthController : BaseController, IAuthController
 {
     private readonly ILogger _logger;
-    //private readonly IUserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
 
     /// <summary>
     /// Authentication Constructor
     /// </summary>
-    public AuthController(ILogger logger)
+    public AuthController(ILogger logger, IUserRepository userRepository)
     {
         _logger = logger.ForContext<AuthController>();
-        //_userRepository = userRepository;
+        _userRepository = userRepository;
     }
     
     /// <summary>
@@ -35,7 +35,18 @@ public class AuthController : BaseController, IAuthController
     {
         // Create logic for Authenticating a user
         _logger.Debug("Authentication Started");
-        
-        return Ok(new UserDto());
+        try
+        {
+            var user = await _userRepository.GetUser(loginDto);
+            return new UserDto()
+            {
+                Username = user.UserName
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("User not able to be authenticated");
+            return Unauthorized();
+        }
     }
 }
