@@ -18,8 +18,6 @@ public class Program
             .ConfigureWebHostDefaults(webHostBuilder =>
             {
                 webHostBuilder
-                    .UseContentRoot(Directory.GetCurrentDirectory())
-                    .UseIISIntegration()
                     .UseStartup<Startup>();
                 
             })

@@ -32,7 +32,7 @@ export default function Login() {
 
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json'},
             body: JSON.stringify({
                 Username: email,
                 Password: password

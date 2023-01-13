@@ -1,7 +1,9 @@
-﻿using System.Reflection;
+﻿using System.Collections.Immutable;
+using System.Reflection;
 using Common.Logging;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using MySql.EntityFrameworkCore.Extensions;
 using Serilog;
 using Server.API.Controllers;
@@ -28,8 +30,22 @@ public class Startup
     {
         services.AddOptions();
         
+        string[] origins = Configuration["CORSOrigin"].Split(",");
+        services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.WithOrigins(origins)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+        });
+        
         RegisterEnvironmentSettings(services);
         RegisterDIServices(services);
+        
+        
         
         services.AddControllers();
         services.AddEndpointsApiExplorer();
@@ -48,19 +64,11 @@ public class Startup
         // FIXME: Redesign logging middleware for custom logging
         app.UseSerilogRequestLogging();
         app.UseHttpsRedirection();
-
-        string[] origins = Configuration["CORSOrigin"].Split(",");
-        app.UseCors(builder =>
-        {
-            builder
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .WithOrigins(origins)
-                .AllowCredentials();
-        });
+        
         app.UseRouting();
-        app.UseAuthorization();
+        app.UseCors("CorsPolicy");
         app.UseAuthentication();
+        app.UseAuthorization();
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
@@ -69,11 +77,10 @@ public class Startup
 
     public void RegisterDIServices(IServiceCollection services)
     {
-        var test = Configuration["ConnectionStrings:MySqlDbConnectionString"];
-         // Register DB Context
+        // Register DB Context
          services.AddEntityFrameworkMySQL().AddDbContext<DataContext>(options =>
          {
-             options.UseMySQL();
+             options.UseMySQL(Configuration["MySqlConnectionString"]);
          });
         
         services.AddScoped<IAuthController, AuthController>();
@@ -90,7 +97,7 @@ public class Startup
     private void RegisterEnvironmentSettings(IServiceCollection services)
     {
         var configs = new ConfigurationBuilder()
-            .AddUserSecrets<Program>(true)
+            .AddJsonFile("Secrets.json", optional: true)
             .AddJsonFile("appsettings.json")
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
             .AddEnvironmentVariables()

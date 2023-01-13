@@ -40,5 +40,9 @@
     <ItemGroup>
         <Using Remove="Microsoft.Extensions.Logging" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Content Remove="local.settings.json" />
+    </ItemGroup>
 
 </Project>
