@@ -1,10 +1,14 @@
 ﻿using System.Timers;
 using Common.Logging;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using MySql.EntityFrameworkCore.Extensions;
 using Serilog;
 using Serilog.Events;
 using Server.API.Controllers;
 using Server.API.Controllers.Interfaces;
+using Server.Infrastructure.Data;
+using Server.Infrastructure.Repositories;
 
 namespace Server.API;
 
@@ -14,7 +18,7 @@ namespace Server.API;
 public class Startup
 {
     private readonly IConfiguration Configuration;
-
+    
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -45,7 +49,7 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         // Configure the HTTP request pipeline.
-        if (env.IsDevelopment())
+        if (env.IsDevelopment() || env.EnvironmentName.Equals("Local"))
         {
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -67,7 +71,18 @@ public class Startup
 
     public void RegisterDIServices(IServiceCollection services)
     {
+        //var _connString = $"Data Source={server};Initial Catalog={db};User ID={user};Password={pass};";
+        //Register DB Context
+        // services.AddEntityFrameworkMySQL().AddDbContext<DataContext>(options =>
+        // {
+        //     options.UseMySQL(_connString);
+        // });
+        //
         services.AddScoped<IAuthController, AuthController>();
+        
+        //TODO: Review Singleton requirements for context
+        //services.AddSingleton<IDataContext, DataContext>();
+        //services.AddSingleton<IUserRepository, UserRepository>();
     }
 
     /// <summary>

@@ -2,6 +2,8 @@
 using Serilog;
 using Server.API.Controllers.Interfaces;
 using Server.API.DTOs;
+using Server.Infrastructure.Entities;
+using Server.Infrastructure.Repositories;
 
 namespace Server.API.Controllers;
 
@@ -13,6 +15,7 @@ namespace Server.API.Controllers;
 public class AuthController : BaseController, IAuthController
 {
     private readonly ILogger _logger;
+    //private readonly IUserRepository _userRepository;
 
     /// <summary>
     /// Authentication Constructor
@@ -20,6 +23,7 @@ public class AuthController : BaseController, IAuthController
     public AuthController(ILogger logger)
     {
         _logger = logger.ForContext<AuthController>();
+        //_userRepository = userRepository;
     }
     
     /// <summary>
@@ -27,10 +31,11 @@ public class AuthController : BaseController, IAuthController
     /// </summary>
     /// <returns>ActionResult</returns>
     [HttpPost]
-    public async Task<ActionResult<UserDto>> AuthenticateUser(LoginDto loginDto)
+    public async Task<ActionResult<UserDto>> AuthenticateUser([FromBody] LoginDto loginDto)
     {
         // Create logic for Authenticating a user
         _logger.Debug("Authentication Started");
+        
         return Ok();
     }
 }
