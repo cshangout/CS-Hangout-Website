@@ -33,13 +33,13 @@ public class Startup
         RegisterDIServices(services);
 
         //Setup CORS Policy
-        string[] origins = Configuration["CORSOrigin"].Split(",");
+/*        string[] origins = Configuration["CORSOrigin"].Split(",");
         var corsBuilder = new CorsPolicyBuilder()
              .AllowAnyHeader()
              .AllowAnyMethod()
              .WithOrigins(origins)
              .AllowCredentials();
-                 services.AddCors(options => { options.AddPolicy("SiteCorsPolicy", corsBuilder.Build()); });
+                 services.AddCors(options => { options.AddPolicy("SiteCorsPolicy", corsBuilder.Build()); });*/
 
         services.AddControllers();
         services.AddEndpointsApiExplorer();
@@ -58,8 +58,14 @@ public class Startup
         // FIXME: Redesign logging middleware for custom logging
         app.UseSerilogRequestLogging();
         app.UseHttpsRedirection();
-
-        app.UseCors();
+        string[] origins = Configuration["CORSOrigin"].Split(",");
+        app.UseCors(builder =>
+        {
+            builder.AllowAnyHeader()
+             .AllowAnyMethod()
+             .WithOrigins(origins)
+             .AllowCredentials();
+        });
         app.UseRouting();
         app.UseAuthorization();
         app.UseAuthentication();

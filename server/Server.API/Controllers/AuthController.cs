@@ -36,6 +36,6 @@ public class AuthController : BaseController, IAuthController
         // Create logic for Authenticating a user
         _logger.Debug("Authentication Started");
         
-        return Ok();
+        return Ok(new UserDto());
     }
 }
