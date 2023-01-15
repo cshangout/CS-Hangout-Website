@@ -110,4 +110,21 @@ describe('Test the Login component', () => {
 
     expect(isValid).toBeValid();
   });
+
+  // Expect there to be no toast alert, indicating success
+  test('test successful connection to backend', () => {
+    render(<Login />);
+    const testEmail = 'test@mail.com';
+    const testPassword = 'thisis8char';
+
+    const emailInput = screen.getByTestId('login-form-email-input');
+    const passwordInput = screen.getByTestId('login-form-password-input');
+    const submit = screen.getByText('Login');
+
+    userEvent.type(emailInput, testEmail);
+    userEvent.type(passwordInput, testPassword);
+    userEvent.click(submit);
+
+    expect(screen.queryByRole('alert')).toBe(null);
+  });
 })
