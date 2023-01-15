@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Server.API.Controllers.Interfaces;
 using Server.API.DTOs;
 using Server.Infrastructure.Entities;
 using Server.Infrastructure.Repositories;
+using Server.Infrastructure.Repositories.Users;
 
 namespace Server.API.Controllers;
 
@@ -15,15 +17,15 @@ namespace Server.API.Controllers;
 public class AuthController : BaseController, IAuthController
 {
     private readonly ILogger _logger;
-    //private readonly IUserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
 
     /// <summary>
     /// Authentication Constructor
     /// </summary>
-    public AuthController(ILogger logger)
+    public AuthController(ILogger logger, IUserRepository userRepository)
     {
         _logger = logger.ForContext<AuthController>();
-        //_userRepository = userRepository;
+        _userRepository = userRepository;
     }
     
     /// <summary>
@@ -35,7 +37,45 @@ public class AuthController : BaseController, IAuthController
     {
         // Create logic for Authenticating a user
         _logger.Debug("Authentication Started");
-        
-        return Ok();
+        try
+        {
+            var user = await _userRepository.GetUser(loginDto);
+            return Ok(new UserDto()
+            {
+                Username = user.UserName
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("User not able to be authenticated");
+            return Unauthorized();
+        }
+    }
+
+    [HttpPost("register")]
+    [AllowAnonymous]
+    public async Task<ActionResult<UserDto>> RegisterUser([FromBody] RegisterDto registerDto)
+    {
+        _logger.Debug($"Registering user {registerDto.UserName}");
+
+        try
+        {
+            var user = await _userRepository.AddUser(registerDto);
+
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                _logger.Debug("RegisterUser request failed");
+                return BadRequest();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Error($"Error occurred during RegisterUser:\n{ex}");
+            return BadRequest();
+        }
     }
 }

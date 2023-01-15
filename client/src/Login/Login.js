@@ -23,22 +23,46 @@ export default function Login() {
     const [usernameValid, setUsernameValid] = useState(false);
     const [passwordValid, setPasswordValid] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         const form = e.currentTarget;
         e.preventDefault();
 
         let tempVarToActAsSuccessfulRequest = false;
         let responseCode = 401;
 
-        const checkValid = () => {
-            if (tempVarToActAsSuccessfulRequest) {
-                console.log("Route to homepage")
-            }
-            else {
-                handleErrors(responseCode);
-            }
-        }
-        checkValid();
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                Username: email,
+                Password: password
+            })
+        };
+
+        fetch('https://localhost:5001/api/auth', requestOptions)
+            .then(function (response) {
+                console.log("Status Code: " + response.status);
+                if (!response.ok) {
+                    setColor(ToastConstants.color.error);
+                    setMessage(response.status);
+                    setShow(true);
+                }
+                else {
+                    console.log("Route to next page!");
+                    return response.json();
+                }
+            })
+            .then(data => console.log(data));
+
+        // const checkValid = () => {
+        //     if (tempVarToActAsSuccessfulRequest) {
+        //         console.log("Route to homepage")
+        //     }
+        //     else {
+        //         handleErrors(responseCode);
+        //     }
+        // }
+        // checkValid();
     }
 
     const onEmailChange = (e) => {
