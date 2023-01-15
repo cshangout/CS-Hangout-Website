@@ -5,8 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
-      <UserSecretsId>b6d2b318-0a41-4f8b-ab2b-f9e9480fa125</UserSecretsId>
-  </PropertyGroup>
+        <UserSecretsId>9d7872b7-672f-4985-972f-7bbca7c42529</UserSecretsId>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
