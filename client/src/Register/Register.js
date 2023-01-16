@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap"
-import { RegisterConstants } from "../__helpers__/Constants"
+import { UserConstants } from "../__helpers__/Constants"
 import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -91,13 +91,12 @@ export default function Register() {
                                     <Card.Title className="text-center">Register Form</Card.Title>
                                     <Form
                                         noValidate
-                                        // onSubmit={handleSubmit}
                                         data-testid='register-form-validity-test'>
                                         <Form.Group className='mb-3'>
                                             <Form.Label htmlFor='username'>Username</Form.Label>
                                             <Form.Control
                                                 type='text'
-                                                placeholder={RegisterConstants.username.placeholder}
+                                                placeholder={UserConstants.username.placeholder}
                                                 maxLength={40} id='username'
                                                 required data-testid='register-form-username-input'
                                                 onChange={(e) => onUsernameChange(e)} />
@@ -109,7 +108,7 @@ export default function Register() {
                                             <Form.Label htmlFor='email'>Email Address</Form.Label>
                                             <Form.Control
                                                 type='email'
-                                                placeholder={RegisterConstants.email.placeholder}
+                                                placeholder={UserConstants.email.placeholder}
                                                 maxLength={40} id='email'
                                                 required data-testid='register-form-email-input'
                                                 onChange={(e) => onEmailChange(e)} />
@@ -122,8 +121,8 @@ export default function Register() {
                                             <Form.Control
                                                 type='password'
                                                 placeholder='Enter Password'
-                                                minLength={RegisterConstants.password.minLength}
-                                                maxLength={RegisterConstants.password.maxLength}
+                                                minLength={UserConstants.password.minLength}
+                                                maxLength={UserConstants.password.maxLength}
                                                 id='password'
                                                 required
                                                 data-testid='register-form-password-input'
@@ -137,8 +136,8 @@ export default function Register() {
                                             <Form.Control
                                                 type='password'
                                                 placeholder='Enter Password Again'
-                                                minLength={RegisterConstants.password.minLength}
-                                                maxLength={RegisterConstants.password.maxLength}
+                                                minLength={UserConstants.password.minLength}
+                                                maxLength={UserConstants.password.maxLength}
                                                 id='checkPassword'
                                                 required
                                                 data-testid='register-form-check-password-input'

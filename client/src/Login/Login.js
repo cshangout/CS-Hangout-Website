@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button';
 import CardGroup from 'react-bootstrap/CardGroup';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { LoginConstants, ToastConstants } from "../__helpers__/Constants";
+import { UserConstants, ToastConstants } from "../__helpers__/Constants";
 import Toast from '../Toast/Toast';
 
 
@@ -53,16 +53,6 @@ export default function Login() {
                 }
             })
             .then(data => console.log(data));
-
-        // const checkValid = () => {
-        //     if (tempVarToActAsSuccessfulRequest) {
-        //         console.log("Route to homepage")
-        //     }
-        //     else {
-        //         handleErrors(responseCode);
-        //     }
-        // }
-        // checkValid();
     }
 
     const onEmailChange = (e) => {
@@ -153,7 +143,7 @@ export default function Login() {
                                             <Form.Label htmlFor='email'>Email Address</Form.Label>
                                             <Form.Control
                                                 type='email'
-                                                placeholder={LoginConstants.email.placeholder}
+                                                placeholder={UserConstants.email.placeholder}
                                                 maxLength={40} id='email'
                                                 required data-testid='login-form-email-input'
                                                 onChange={(e) => onEmailChange(e)} />
@@ -168,8 +158,8 @@ export default function Login() {
                                             <Form.Control
                                                 type='password'
                                                 placeholder='Enter Password'
-                                                minLength={LoginConstants.password.minLength}
-                                                maxLength={LoginConstants.password.maxLength}
+                                                minLength={UserConstants.password.minLength}
+                                                maxLength={UserConstants.password.maxLength}
                                                 id='password'
                                                 required
                                                 data-testid='login-form-password-input'
