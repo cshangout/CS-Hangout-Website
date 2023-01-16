@@ -1,17 +1,12 @@
-using System.Configuration;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using MySql.EntityFrameworkCore.Extensions;
 using Serilog;
 using Server.API.Controllers;
 using Server.API.Controllers.Interfaces;
 using Server.API.Features.Authentication;
-using Server.API.Features.Logging;
 using Server.API.Features.Settings;
 using Server.Infrastructure.Data;
 using Server.Infrastructure.Mappers;
 using Server.Infrastructure.Repositories.Users;
-
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -37,6 +37,11 @@ public class AuthController : BaseController, IAuthController
     {
         // Create logic for Authenticating a user
         _logger.Debug("Authentication Started");
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         try
         {
             var user = await _userRepository.GetUser(loginDto);
@@ -48,7 +53,7 @@ public class AuthController : BaseController, IAuthController
         catch (Exception ex)
         {
             _logger.Error("User not able to be authenticated");
-            return Unauthorized();
+            return Unauthorized("User not authorized.");
         }
     }
 
@@ -57,7 +62,11 @@ public class AuthController : BaseController, IAuthController
     public async Task<ActionResult<UserDto>> RegisterUser([FromBody] RegisterDto registerDto)
     {
         _logger.Debug($"Registering user {registerDto.UserName}");
-
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         try
         {
             var user = await _userRepository.AddUser(registerDto);
