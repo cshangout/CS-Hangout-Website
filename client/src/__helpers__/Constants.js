@@ -1,5 +1,9 @@
-// Constants related to login requirements
-export const LoginConstants = {
+// Constants related to login and register requirements
+export const UserConstants = {
+    username: {
+        length: 40,
+        placeholder: "Enter Username"
+    },
     email: {
         length: 40,
         placeholder: "someone@example.com"
@@ -26,21 +30,5 @@ export const ToastConstants = {
     color: {
         success: "success",
         error: "danger",
-    }
-}
-
-// Constants related to register requirements
-export const RegisterConstants = {
-    username: {
-        length: 40,
-        placeholder: "Enter Username"
-    },
-    email: {
-        length: 40,
-        placeholder: "someone@example.com"
-    },
-    password: {
-        minLength: 8,
-        maxLength: 24
     }
 }
