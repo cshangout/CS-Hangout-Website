@@ -27,9 +27,6 @@ export default function Login() {
         const form = e.currentTarget;
         e.preventDefault();
 
-        let tempVarToActAsSuccessfulRequest = false;
-        let responseCode = 401;
-
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
