@@ -28,3 +28,19 @@ export const ToastConstants = {
         error: "danger",
     }
 }
+
+// Constants related to register requirements
+export const RegisterConstants = {
+    username: {
+        length: 40,
+        placeholder: "Enter Username"
+    },
+    email: {
+        length: 40,
+        placeholder: "someone@example.com"
+    },
+    password: {
+        minLength: 8,
+        maxLength: 24
+    }
+}
