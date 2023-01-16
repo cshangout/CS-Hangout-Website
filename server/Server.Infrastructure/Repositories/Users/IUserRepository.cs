@@ -6,6 +6,7 @@ namespace Server.Infrastructure.Repositories.Users;
 
 public interface IUserRepository
 {
-    public Task<User> GetUser(LoginDto loginDto);
+    public Task<User?> GetUserByUsername(LoginDto loginDto);
+    public Task<User?> GetUserByEmail(LoginDto loginDto);
     public Task<UserDto> AddUser(RegisterDto registerDto);
 }

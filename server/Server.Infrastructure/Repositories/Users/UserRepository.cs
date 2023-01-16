@@ -42,16 +42,30 @@ public class UserRepository : IUserRepository
 
     }
     
-    public async Task<User?> GetUser(LoginDto loginDto)
+    public async Task<User?> GetUserByUsername(LoginDto loginDto)
     {
         try
         {
             return await _dataContext.Users.FirstOrDefaultAsync(user =>
-                user.UserName == loginDto.Username && user.Password == loginDto.Password);
+                user.Email == loginDto.Username && user.Password == loginDto.Password);
         }
         catch (Exception ex)
         {
-            _logger.Error("User not found");
+            _logger.Error("Username and password combination returned no results");
+            return null;
+        }
+    }
+
+    public async Task<User?> GetUserByEmail(LoginDto loginDto)
+    {
+        try
+        {
+            return await _dataContext.Users.FirstOrDefaultAsync(user =>
+                user.Email == loginDto.Email && user.Password == loginDto.Password);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("Email and password combination returned no results.");
             return null;
         }
     }
