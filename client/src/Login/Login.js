@@ -40,9 +40,7 @@ export default function Login() {
             .then(function (response) {
                 console.log("Status Code: " + response.status);
                 if (!response.ok) {
-                    setColor(ToastConstants.color.error);
-                    setMessage(response.status);
-                    setShow(true);
+                    handleErrors(response.status);
                 }
                 else {
                     console.log("Route to next page!");
@@ -111,7 +109,9 @@ export default function Login() {
                 setShow(true);
                 break;
             default:
-                console.log("Unhandled error code");
+                setColor(ToastConstants.color.error);
+                setMessage("Unhandled error code");
+                setShow(true);
                 break;
         }
     }
