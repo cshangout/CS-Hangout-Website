@@ -11,7 +11,7 @@ import Toast from '../Toast/Toast';
 
 // FIXME: Review formating of extra columns
 export default function Register() {
-    const [show, setShow] = useState(false);
+    const [showToast, setShowToast] = useState(false);
     const [color, setColor] = useState(null);
     const [message, setMessage] = useState(null);
     const [username, setUsername] = useState('');
@@ -23,6 +23,8 @@ export default function Register() {
     const [emailValid, setEmailValid] = useState(false);
     const [usernameValid, setUsernameValid] = useState(false);
     const [passwordValid, setPasswordValid] = useState(false);
+
+    const URL = process.env.REACT_APP_BACKEND_API_ENDPOINT;
 
     const handleSubmit = async (e) => {
         const form = e.currentTarget;
@@ -38,8 +40,8 @@ export default function Register() {
             })
         };
 
-        fetch('https://localhost:5001/api/auth/register', requestOptions)
-            .then(function (response) {
+        fetch(`${URL}/api/auth/register`, requestOptions)
+            .then((response) => {
                 console.log("Status Code: " + response.status);
                 if (!response.ok) {
                     handleErrors(response.status);
@@ -116,31 +118,31 @@ export default function Register() {
             case 400:
                 setColor(ToastConstants.color.error);
                 setMessage(ToastConstants.registerMsg.userAlreadyRegistered);
-                setShow(true);
+                setShowToast(true);
                 break;
             case 401:
                 setColor(ToastConstants.color.error);
                 setMessage(ToastConstants.registerMsg.unauthorizedRegister);
-                setShow(true);
+                setShowToast(true);
                 break;
             case 500:
                 setColor(ToastConstants.color.error);
                 setMessage(ToastConstants.registerMsg.contactSupport);
-                setShow(true);
+                setShowToast(true);
                 break;
             default:
                 setColor(ToastConstants.color.error);
                 setMessage("Unhandled error code");
-                setShow(true);
+                setShowToast(true);
                 break;
         }
     }
 
     return (
         <div>
-            {show ? <Toast
-                onClose={() => setShow(false)}
-                show={show}
+            {showToast ? <Toast
+                onClose={() => setShowToast(false)}
+                showToast={showToast}
                 delay={3000}
                 autohide={true}
                 color={color}
