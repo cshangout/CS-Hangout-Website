@@ -67,16 +67,17 @@ public class AuthControllerTests
     
     #region Authenticate Endpoint
     [Fact]
-    public async void AuthController_Authenticate_User_Endpoint_Returns_Valid_User()
+    public async void AuthController_Authenticate_User_Endpoint_Returns_Valid_User_With_Email_Login()
     {
         // Arrange
         SetupMockLogger();
-        var testLoginData = TestLoginDto.GetLoginDto();
+        var testLoginData = TestLoginDto.GetLoginDto(username: null);
         var testController = GetTestController();
-        
+        var testValidReturnData = TestUser.GetTestUser();
+
         mockUserRepository.Setup(
-                x => x.GetUser(It.IsAny<LoginDto>()))
-            .Returns(Task.FromResult(TestUser.GetTestUser()))
+                x => x.GetUserByEmail(It.IsAny<LoginDto>()))
+            .Returns(Task.FromResult(testValidReturnData))
             .Verifiable();
         
         // Act
@@ -89,7 +90,7 @@ public class AuthControllerTests
         result.Value.Should().BeOfType<UserDto>();
 
         var resultData = result.Value as UserDto;
-        resultData.Username.Should().Be(testLoginData.Username);
+        resultData.Username.Should().Be(testValidReturnData.UserName);
     }
     #endregion
     

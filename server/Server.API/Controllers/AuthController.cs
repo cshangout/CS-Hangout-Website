@@ -4,6 +4,7 @@ using Serilog;
 using Server.API.Controllers.Interfaces;
 using Server.API.DTOs;
 using Server.Infrastructure.Entities;
+using Server.Infrastructure.Entities.Users;
 using Server.Infrastructure.Repositories;
 using Server.Infrastructure.Repositories.Users;
 
@@ -44,10 +45,19 @@ public class AuthController : BaseController, IAuthController
         
         try
         {
-            var user = await _userRepository.GetUser(loginDto);
+            User? userData;
+            if (loginDto.Username == null)
+            {
+                userData = await _userRepository.GetUserByEmail(loginDto);
+            }
+            else
+            {
+                userData = await _userRepository.GetUserByUsername(loginDto);
+            }
+            
             return Ok(new UserDto()
             {
-                Username = user.UserName
+                Username = userData.UserName
             });
         }
         catch (Exception ex)
