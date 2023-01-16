@@ -1,5 +1,9 @@
-// Constants related to login requirements
-export const LoginConstants = {
+// Constants related to login and register requirements
+export const UserConstants = {
+    username: {
+        length: 40,
+        placeholder: "Enter Username"
+    },
     email: {
         length: 40,
         placeholder: "someone@example.com"
