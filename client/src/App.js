@@ -1,7 +1,6 @@
 // Component Imports
 import Header from "./Header/Header";
 import AuthLandingPage from "./Authentication/AuthLandingPage";
-
 // Style imports
 import './App.css';
 import {Container} from "react-bootstrap";
