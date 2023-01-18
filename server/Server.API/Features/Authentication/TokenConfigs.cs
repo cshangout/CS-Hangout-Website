@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Server.API.Features.Authentication;
 
-public static class Authentication
+public static class TokenConfigs
 {
     public static void RegisterJwtPolicy(this IServiceCollection services, IConfiguration configs)
     {

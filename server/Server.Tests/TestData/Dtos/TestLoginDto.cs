@@ -1,4 +1,4 @@
-﻿using Server.API.DTOs;
+﻿using Common.Models.DTOs;
 
 namespace Server.Tests.TestData.Dtos;
 

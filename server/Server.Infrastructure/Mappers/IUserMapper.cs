@@ -1,11 +1,10 @@
-﻿using Server.API.DTOs;
-using Server.Infrastructure.Entities;
-using Server.Infrastructure.Entities.Users;
+﻿using Common.Models.DTOs;
+using Common.Models.Entities;
 
 namespace Server.Infrastructure.Mappers;
 
 public interface IUserMapper
 {
-    public User MapRegisterDtoToUser(RegisterDto registerDto);
-    public UserDto MapUserEntityToUserDto(User user);
+    public ApplicationUser MapRegisterDtoToUser(RegisterDto registerDto);
+    public UserDto MapUserEntityToUserDto(ApplicationUser applicationUser);
 }

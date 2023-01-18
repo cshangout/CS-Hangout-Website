@@ -1,12 +1,12 @@
-﻿using Server.API.DTOs;
-using Server.Infrastructure.Entities;
-using Server.Infrastructure.Entities.Users;
+﻿using Common.Models.DTOs;
+using Common.Models.Entities;
+using Common.Models.Statuses;
 
 namespace Server.Infrastructure.Repositories.Users;
 
 public interface IUserRepository
 {
-    public Task<User?> GetUserByUsername(LoginDto loginDto);
-    public Task<User?> GetUserByEmail(LoginDto loginDto);
-    public Task<UserDto> AddUser(RegisterDto registerDto);
+    public Task<ApplicationUser?> GetUserByUsername(LoginDto loginDto);
+    public Task<ApplicationUser?> GetUserByEmail(LoginDto loginDto);
+    public Task<RegisterUserStatus> AddUser(RegisterDto registerDto);
 }

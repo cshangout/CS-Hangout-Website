@@ -1,4 +1,4 @@
-﻿namespace Server.API.DTOs;
+﻿namespace Common.Models.DTOs;
 
 public class UserDto
 {

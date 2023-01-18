@@ -1,4 +1,5 @@
-using Microsoft.EntityFrameworkCore;
+using Common.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
 using Server.API.Controllers;
 using Server.API.Controllers.Interfaces;
@@ -36,18 +37,18 @@ builder.Services.AddCors(options =>
 
 // Register Services
 builder.Services.AddOptions();
-builder.Services.RegisterJwtPolicy(builder.Configuration);
 
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseMySQL(builder.Configuration["MySqlConnectionString"]);
-});
+// Setup authentication and Identity management
+builder.Services.AddPersistence(builder.Configuration);
+builder.Services.SetIdentityConfigs();
+builder.Services.RegisterJwtPolicy(builder.Configuration);
 
 // Register Services
 builder.Services.AddTransient<IUserMapper, UserMapper>();
-builder.Services.AddScoped<IDataContext, DataContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthController, AuthController>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IRegistrationService, RegistrationService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
