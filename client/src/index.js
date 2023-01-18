@@ -2,23 +2,23 @@ import React from 'react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
 // Bootstrap import
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ReactDOM from 'react-dom/client';
 import {
     createBrowserRouter, RouterProvider
 } from "react-router-dom";
+import Register from "./Register/Register";
 
 
-
+//creates routing for different pages of website.
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App /> ,
     }, {
-        path: "/butts",
-        element: <div> <h1>testicles</h1> </div>,
+        path: "/register",
+        element: <Register />,
     }
 ]);
 
