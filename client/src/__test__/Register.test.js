@@ -159,4 +159,26 @@ describe('Test the Register component', () => {
     
         expect(isValid).toBeValid();
       });
+
+      test('test successful connection to backend', () => {
+        render(<Register />);
+    
+        const testUsername = 'testusername'
+        const testEmail = 'test@mail.com';
+        const testPassword = 'thisis8char';
+    
+        const usernameInput = screen.getByTestId('register-form-username-input');
+        const emailInput = screen.getByTestId('register-form-email-input');
+        const passwordInput = screen.getByTestId('register-form-password-input');
+        const checkPasswordInput = screen.getByTestId('register-form-check-password-input');
+        const submit = screen.getByText('Register');
+    
+        userEvent.type(usernameInput, testUsername);
+        userEvent.type(emailInput, testEmail);
+        userEvent.type(passwordInput, testPassword);
+        userEvent.type(checkPasswordInput, testPassword);
+        userEvent.click(submit);
+    
+        expect(screen.queryByRole('alert')).toBe(null);
+      });
 })

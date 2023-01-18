@@ -24,8 +24,13 @@ export const ToastConstants = {
     },
     serverErrorMsg: {
         badRequest: "Bad request. Invalid request.",
-        serverDown: "Servor error. Server is potentially down or not responding.",
-        default: "An error has occured.",
+        serverDown: "Server error. Server is potentially down or not responding.",
+        default: "An error has occurred.",
+    },
+    registerMsg: {
+        userAlreadyRegistered: "Bad request. User is already registered.",
+        unauthorizedRegister: "Unauthorized to register account.",
+        contactSupport: "Server error received. Contact tech support if they exist.",
     },
     color: {
         success: "success",
