@@ -5,7 +5,10 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import {useNavigate} from "react-router-dom";
 
-export default function Header() {
+export default function Header({ isLoggedIn, setIsLoggedIn }) {
+    const onClick = () => {
+        setIsLoggedIn(isLoggedIn = false);
+    }
 
     const [loggedIn, setLoggedIn] = useState(false);
 
