@@ -12,7 +12,7 @@ import Toast from '../Toast/Toast';
 
 
 // FIXME: Review formating of extra columns
-export default function Login() {
+export default function Login({ isLoggedIn, setIsLoggedIn }) {
     const [showToast, setShowToast] = useState(false);
     const [color, setColor] = useState(null);
     const [message, setMessage] = useState(null);
@@ -31,7 +31,7 @@ export default function Login() {
 
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 Email: email,
                 Password: password
@@ -46,6 +46,7 @@ export default function Login() {
                 }
                 else {
                     console.log("Route to next page!");
+                    setIsLoggedIn(isLoggedIn = true);
                     return response.json();
                 }
             })
