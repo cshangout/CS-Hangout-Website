@@ -14,7 +14,6 @@ export default function Header() {
     const registerRoute = () =>{
         let path = '/register';
         navigate(path);
-
     }
 
     return (
