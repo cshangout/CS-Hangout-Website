@@ -5,21 +5,32 @@ namespace Server.Infrastructure.Mappers;
 
 public class UserMapper : IUserMapper
 {
-    public ApplicationUser MapRegisterDtoToUser(RegisterDto registerDto)
+    public ApplicationUser MapRegisterDtoToUser(RegisterRequestDto registerRequestDto)
     {
         return new ApplicationUser()
         {
-            UserName = registerDto.UserName,
-            Email = registerDto.Email,
+            UserName = registerRequestDto.UserName,
+            Email = registerRequestDto.Email,
             UpdatedDate = null
         };
     }
 
-    public UserDto MapUserEntityToUserDto(ApplicationUser applicationUser)
+    // TODO: Fix mapper
+    public SignInResponseDto MapUserEntityToUserDto(ApplicationUser applicationUser)
     {
-        return new UserDto()
+        return new SignInResponseDto()
         {
-            Username = applicationUser.UserName
+            //Username = applicationUser.UserName
+        };
+    }
+
+    public LoginRequestDto MapRegisterDtoToLoginDto(RegisterRequestDto registerRequestDto)
+    {
+        return new LoginRequestDto()
+        {
+            Username = registerRequestDto.UserName,
+            Email = registerRequestDto.Email,
+            Password = registerRequestDto.Password
         };
     }
 }

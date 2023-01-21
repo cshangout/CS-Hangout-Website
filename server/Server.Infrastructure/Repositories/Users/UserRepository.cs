@@ -1,13 +1,8 @@
-﻿using System.Collections;
-using Common.Interfaces;
+﻿using Common.Interfaces;
 using Common.Models.DTOs;
 using Common.Models.Entities;
-using Common.Models.Statuses;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Serilog;
-using Server.Infrastructure.Data;
 using Server.Infrastructure.Mappers;
 
 namespace Server.Infrastructure.Repositories.Users;
@@ -19,41 +14,36 @@ public class UserRepository : IUserRepository
     private readonly IDataContext _dataContext;
     private readonly IUserMapper _userMapper;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
 
     public UserRepository(
-        ILogger logger, 
-        IDataContext dataContext, 
+        ILogger logger,
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
         IUserMapper userMapper)
     {
         _logger = logger.ForContext<UserRepository>();
-        _dataContext = dataContext;
         _userManager = userManager;
-        _signInManager = signInManager;
         _userMapper = userMapper;
     }
     
     /// <summary>
     /// Adds user to the Identity User table
     /// </summary>
-    /// <param name="registerDto"></param>
+    /// <param name="registerRequestDto"></param>
     /// <returns></returns>
-    public async Task<RegisterUserStatus> AddUser(RegisterDto registerDto)
+    public async Task<IdentityResult> AddUser(RegisterRequestDto registerRequestDto)
     {
         _logger.Debug("AddUser called");
         try
         {
-            var user = _userMapper.MapRegisterDtoToUser(registerDto);
-            var registeredUserResult = await _userManager.CreateAsync(user, registerDto.Password);
+            var user = _userMapper.MapRegisterDtoToUser(registerRequestDto);
+            var registeredUserResult = await _userManager.CreateAsync(user, registerRequestDto.Password);
 
-            return registeredUserResult.Succeeded ? RegisterUserStatus.Success : RegisterUserStatus.Failed;
+            return registeredUserResult;
         }
         catch (Exception ex)
         {
             _logger.Debug($"AddUser() error:\n{ex}");
-            return RegisterUserStatus.Failed;
+            return IdentityResult.Failed();
         }
 
     }
@@ -61,13 +51,13 @@ public class UserRepository : IUserRepository
     /// <summary>
     /// Get User from Identity User table by username
     /// </summary>
-    /// <param name="loginDto"></param>
+    /// <param name="loginRequestDto"></param>
     /// <returns>ApplicationUser</returns>
-    public async Task<ApplicationUser> GetUserByUsername(LoginDto loginDto)
+    public async Task<ApplicationUser> GetUserByUsername(LoginRequestDto loginRequestDto)
     {
         try
         {
-            var user = await _userManager.FindByNameAsync(loginDto.Username);
+            var user = await _userManager.FindByNameAsync(loginRequestDto.Username);
             return user;
         }
         catch (Exception ex)
@@ -80,13 +70,13 @@ public class UserRepository : IUserRepository
     /// <summary>
     /// Get User from Identity User table by email
     /// </summary>
-    /// <param name="loginDto"></param>
+    /// <param name="loginRequestDto"></param>
     /// <returns>ApplicationUser</returns>
-    public async Task<ApplicationUser?> GetUserByEmail(LoginDto loginDto)
+    public async Task<ApplicationUser?> GetUserByEmail(LoginRequestDto loginRequestDto)
     {
         try
         {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
+            var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
             return user;
         }
         catch (Exception ex)

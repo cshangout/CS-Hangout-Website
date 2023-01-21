@@ -5,6 +5,6 @@ namespace Server.API.Controllers.Interfaces;
 
 public interface IAuthController
 {
-    Task<ActionResult<UserDto>> AuthenticateUser(LoginDto loginDto);
-    public Task<ActionResult> RegisterUser(RegisterDto registerDto);
+    Task<ActionResult<SignInResponseDto>> SignOnUser(LoginRequestDto loginRequestDto);
+    public Task<ActionResult<SignInResponseDto>> RegisterUser(RegisterRequestDto registerRequestDto);
 }

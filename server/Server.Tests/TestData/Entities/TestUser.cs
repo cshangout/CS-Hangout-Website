@@ -5,7 +5,6 @@ namespace Server.Tests.TestData.Entities;
 public static class TestUser
 {
     public static ApplicationUser GetTestUser(
-        int id = 1,
         string username = "testUser",
         string email = "test@gmail.com",
         string password = "passwordHash")

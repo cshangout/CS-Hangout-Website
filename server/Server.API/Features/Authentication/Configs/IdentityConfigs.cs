@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Server.Infrastructure.Data;
 
-namespace Server.API.Features.Authentication;
+namespace Server.API.Features.Authentication.Configs;
 
 public static class IdentityConfigs
 {

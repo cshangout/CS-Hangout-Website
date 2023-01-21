@@ -1,14 +1,11 @@
 ﻿using Common.Models.DTOs;
-using Common.Models.Entities;
-using Common.Models.Statuses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Server.API.Controllers.Interfaces;
-using Server.API.Features.Authentication;
-using Server.Infrastructure.Repositories;
-using Server.Infrastructure.Repositories.Users;
+using Server.API.Features.Authentication.Registration;
+using Server.API.Features.Authentication.SignOn;
+using Server.Infrastructure.Mappers;
 
 namespace Server.API.Controllers;
 
@@ -20,19 +17,22 @@ namespace Server.API.Controllers;
 public class AuthController : BaseController, IAuthController
 {
     private readonly ILogger _logger;
-    private readonly ILoginService _loginService;
+    private readonly ISignOnService _signOnService;
     private readonly IRegistrationService _registrationService;
+    private readonly IUserMapper _userMapper;
 
     /// <summary>
     /// Authentication Constructor
     /// </summary>
     public AuthController(ILogger logger, 
-        ILoginService loginService,
-        IRegistrationService registrationService)
+        ISignOnService signOnService,
+        IRegistrationService registrationService,
+        IUserMapper userMapper)
     {
         _logger = logger.ForContext<AuthController>();
-        _loginService = loginService;
+        _signOnService = signOnService;
         _registrationService = registrationService;
+        _userMapper = userMapper;
     }
 
     /// <summary>
@@ -41,43 +41,66 @@ public class AuthController : BaseController, IAuthController
     /// <returns>ActionResult</returns>
     [HttpPost]
     [AllowAnonymous]
-    public async Task<ActionResult<UserDto>> AuthenticateUser([FromBody] LoginDto loginDto)
+    public async Task<ActionResult<SignInResponseDto>> SignOnUser([FromBody] LoginRequestDto loginRequestDto)
     {
         // Create logic for Authenticating a user
-        _logger.Debug("Authentication Started");
+        _logger.Debug("Sign On Started");
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
         
-        _logger.Debug("Sending login data to PersistenceService");
-        var result = await _loginService.SignOnOrchestrator(loginDto);
+        _logger.Debug("Sending login data to Sign On Service");
+        var result = await _signOnService.SignOnOrchestrator(loginRequestDto);
 
-        if (result.Succeeded) return Ok("logged in");
+        if (!result.SuccessfulSignOn)
+        {
+            return BadRequest(new ErrorResponseDto()
+            {
+                Status = "Failed Login",
+                Message = "Sign on was unsuccessful due to invalid credentials."
+            });
+        }
 
-        return BadRequest("Invalid authentication information provided.");
+        return Ok(result);
     }
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<ActionResult> RegisterUser([FromBody] RegisterDto registerDto)
+    public async Task<ActionResult<SignInResponseDto>> RegisterUser([FromBody] RegisterRequestDto registerRequestDto)
     {
-        _logger.Debug($"Registering user {registerDto.UserName}");
+        _logger.Debug($"Registering user {registerRequestDto.UserName}");
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
         
-        var result = await _registrationService.RegistrationOrchestrator(registerDto);
+        var result = await _registrationService.RegistrationOrchestrator(registerRequestDto);
             
-        // Return token
-        if (result == RegisterUserStatus.Success)
+        // Registration Failed
+        if (!result)
         {
-            return Ok("Registration worked");
+            return StatusCode(500, new ErrorResponseDto()
+            {
+                Status = "Failed Registration",
+                Message = "Registration failed.  This may be due to an internal server error."
+            });
         }
-        else
+
+        _logger.Debug("User registered. Attempting to login...");
+        // Attempt to sign in and return JWT
+        var signInRequest =
+            await _signOnService.SignOnOrchestrator(_userMapper.MapRegisterDtoToLoginDto(registerRequestDto));
+
+        if (!signInRequest.SuccessfulSignOn)
         {
-            return StatusCode(500);
+            return BadRequest(new ErrorResponseDto()
+            {
+                Status = "Failed Login",
+                Message = "Sign on was unsuccessful due to invalid credentials."
+            });
         }
+        
+        return Ok(signInRequest);
     }
 }

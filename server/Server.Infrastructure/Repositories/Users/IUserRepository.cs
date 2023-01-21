@@ -1,12 +1,12 @@
 ﻿using Common.Models.DTOs;
 using Common.Models.Entities;
-using Common.Models.Statuses;
+using Microsoft.AspNetCore.Identity;
 
 namespace Server.Infrastructure.Repositories.Users;
 
 public interface IUserRepository
 {
-    public Task<ApplicationUser?> GetUserByUsername(LoginDto loginDto);
-    public Task<ApplicationUser?> GetUserByEmail(LoginDto loginDto);
-    public Task<RegisterUserStatus> AddUser(RegisterDto registerDto);
+    public Task<ApplicationUser?> GetUserByUsername(LoginRequestDto loginRequestDto);
+    public Task<ApplicationUser?> GetUserByEmail(LoginRequestDto loginRequestDto);
+    public Task<IdentityResult> AddUser(RegisterRequestDto registerRequestDto);
 }

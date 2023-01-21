@@ -2,7 +2,7 @@
 
 namespace Common.Models.DTOs;
 
-public class RegisterDto
+public class RegisterRequestDto
 {
     [Required]
     public string UserName { get; set; }

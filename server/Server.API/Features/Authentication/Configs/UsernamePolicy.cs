@@ -1,4 +1,4 @@
-﻿namespace Server.API.Features.Authentication;
+﻿namespace Server.API.Features.Authentication.Configs;
 
 public class UsernamePolicy
 {

@@ -1,9 +1,8 @@
 ﻿using Common.Models.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace Server.API.Features.Authentication;
+namespace Server.API.Features.Authentication.Configs;
 
 public class PasswordPolicy : PasswordValidator<ApplicationUser>
 {

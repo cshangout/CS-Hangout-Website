@@ -4,12 +4,12 @@ namespace Server.Tests.TestData.Dtos;
 
 public static class TestRegisterDto
 {
-    public static RegisterDto GetRegisterDto(
+    public static RegisterRequestDto GetRegisterDto(
         string username = "testUser",
         string email = "testemail@gmail.com",
         string password = "123456789")
     {
-        return new RegisterDto()
+        return new RegisterRequestDto()
         {
             UserName = username,
             Email = email,

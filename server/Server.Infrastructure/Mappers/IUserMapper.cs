@@ -5,6 +5,7 @@ namespace Server.Infrastructure.Mappers;
 
 public interface IUserMapper
 {
-    public ApplicationUser MapRegisterDtoToUser(RegisterDto registerDto);
-    public UserDto MapUserEntityToUserDto(ApplicationUser applicationUser);
+    public ApplicationUser MapRegisterDtoToUser(RegisterRequestDto registerRequestDto);
+    public SignInResponseDto MapUserEntityToUserDto(ApplicationUser applicationUser);
+    public LoginRequestDto MapRegisterDtoToLoginDto(RegisterRequestDto registerRequestDto);
 }
