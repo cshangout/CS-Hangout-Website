@@ -46,7 +46,7 @@ export default function Login({ isLoggedIn, setIsLoggedIn }) {
                 }
                 else {
                     console.log("Route to next page!");
-                    setIsLoggedIn(isLoggedIn = true);
+                    setIsLoggedIn(true);
                     return response.json();
                 }
             })

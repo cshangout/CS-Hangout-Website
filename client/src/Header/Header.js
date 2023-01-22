@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 
 export default function Header({ isLoggedIn, setIsLoggedIn }) {
     const onClick = () => {
-        setIsLoggedIn(isLoggedIn = false);
+        setIsLoggedIn(false);
     }
 
     const [loggedIn, setLoggedIn] = useState(false);
