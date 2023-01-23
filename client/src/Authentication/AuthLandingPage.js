@@ -1,7 +1,7 @@
 import Login from '../Login/Login';
 
-export default function AuthLandingPage() {
+export default function AuthLandingPage({ isLoggedIn, setIsLoggedIn }) {
     return (
-        <Login />
+        <Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
     )
 }

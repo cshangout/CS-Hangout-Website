@@ -1,11 +1,14 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import {useState} from "react";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import {useNavigate} from "react-router-dom";
 
-export default function Header() {
+export default function Header({ isLoggedIn, setIsLoggedIn }) {
+    const onClick = () => {
+        setIsLoggedIn(false);
+    }
 
     const [loggedIn, setLoggedIn] = useState(false);
 
@@ -21,18 +24,17 @@ export default function Header() {
             <Container>
                 <Navbar.Brand href="#home">CS Hangout</Navbar.Brand>
                 <Navbar.Collapse className="justify-content-end">
-                    {/*if logged in, following displays in header*/}
-                    {loggedIn ?
+                    {isLoggedIn ?
                         <Nav>
                             <Nav.Link href="#home">I am a link! Click me!</Nav.Link>
-                            <Button variant="outline-primary">Log out</Button>
+                            <Button onClick={onClick} data-testid="header-logout-button-test" variant="outline-primary">Log out</Button>
                         </Nav>
                          // if not logged in, this displays
-                         :
+                        :
                         <Nav>
                             <Nav.Link href="#home">I am a link! Click me!</Nav.Link>
                             <Button variant="outline-primary" onClick={registerRoute}>Register</Button>
-                            <Button variant="outline-primary">Login</Button>
+                            <Button variant="outline-primary" data-testid="header-login-button-test" >Login</Button>
                         </Nav>
                     }
                 </Navbar.Collapse>
