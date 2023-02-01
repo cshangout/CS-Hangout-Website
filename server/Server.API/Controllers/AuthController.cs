@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Common.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Server.API.Controllers.Interfaces;
-using Server.API.DTOs;
-using Server.Infrastructure.Entities;
-using Server.Infrastructure.Entities.Users;
-using Server.Infrastructure.Repositories;
-using Server.Infrastructure.Repositories.Users;
+using Server.API.Features.Authentication.Registration;
+using Server.API.Features.Authentication.SignOn;
+using Server.Infrastructure.Mappers;
 
 namespace Server.API.Controllers;
 
@@ -18,83 +17,90 @@ namespace Server.API.Controllers;
 public class AuthController : BaseController, IAuthController
 {
     private readonly ILogger _logger;
-    private readonly IUserRepository _userRepository;
+    private readonly ISignOnService _signOnService;
+    private readonly IRegistrationService _registrationService;
+    private readonly IUserMapper _userMapper;
 
     /// <summary>
     /// Authentication Constructor
     /// </summary>
-    public AuthController(ILogger logger, IUserRepository userRepository)
+    public AuthController(ILogger logger, 
+        ISignOnService signOnService,
+        IRegistrationService registrationService,
+        IUserMapper userMapper)
     {
         _logger = logger.ForContext<AuthController>();
-        _userRepository = userRepository;
+        _signOnService = signOnService;
+        _registrationService = registrationService;
+        _userMapper = userMapper;
     }
-    
+
     /// <summary>
     /// Authenticate User method and return response based on validation
     /// </summary>
     /// <returns>ActionResult</returns>
     [HttpPost]
-    public async Task<ActionResult<UserDto>> AuthenticateUser([FromBody] LoginDto loginDto)
+    [AllowAnonymous]
+    public async Task<ActionResult<SignInResponseDto>> SignOnUser([FromBody] LoginRequestDto loginRequestDto)
     {
         // Create logic for Authenticating a user
-        _logger.Debug("Authentication Started");
+        _logger.Debug("Sign On Started");
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
         
-        try
+        _logger.Debug("Sending login data to Sign On Service");
+        var result = await _signOnService.SignOnOrchestrator(loginRequestDto);
+
+        if (!result.SuccessfulSignOn)
         {
-            User? userData;
-            if (loginDto.Username == null)
+            return BadRequest(new ErrorResponseDto()
             {
-                userData = await _userRepository.GetUserByEmail(loginDto);
-            }
-            else
-            {
-                userData = await _userRepository.GetUserByUsername(loginDto);
-            }
-            
-            return Ok(new UserDto()
-            {
-                Username = userData.UserName
+                Status = "Failed Login",
+                Message = "Sign on was unsuccessful due to invalid credentials."
             });
         }
-        catch (Exception ex)
-        {
-            _logger.Error("User not able to be authenticated");
-            return Unauthorized("User not authorized.");
-        }
+
+        return Ok(result);
     }
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<ActionResult<UserDto>> RegisterUser([FromBody] RegisterDto registerDto)
+    public async Task<ActionResult<SignInResponseDto>> RegisterUser([FromBody] RegisterRequestDto registerRequestDto)
     {
-        _logger.Debug($"Registering user {registerDto.UserName}");
+        _logger.Debug($"Registering user {registerRequestDto.UserName}");
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
         
-        try
+        var result = await _registrationService.RegistrationOrchestrator(registerRequestDto);
+            
+        // Registration Failed
+        if (!result)
         {
-            var user = await _userRepository.AddUser(registerDto);
+            return StatusCode(500, new ErrorResponseDto()
+            {
+                Status = "Failed Registration",
+                Message = "Registration failed.  This may be due to an internal server error."
+            });
+        }
 
-            if (user != null)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                _logger.Debug("RegisterUser request failed");
-                return BadRequest();
-            }
-        }
-        catch (Exception ex)
+        _logger.Debug("User registered. Attempting to login...");
+        // Attempt to sign in and return JWT
+        var signInRequest =
+            await _signOnService.SignOnOrchestrator(_userMapper.MapRegisterDtoToLoginDto(registerRequestDto));
+
+        if (!signInRequest.SuccessfulSignOn)
         {
-            _logger.Error($"Error occurred during RegisterUser:\n{ex}");
-            return BadRequest();
+            return BadRequest(new ErrorResponseDto()
+            {
+                Status = "Failed Login",
+                Message = "Sign on was unsuccessful due to invalid credentials."
+            });
         }
+        
+        return Ok(signInRequest);
     }
 }

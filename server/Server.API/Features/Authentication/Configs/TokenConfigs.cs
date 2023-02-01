@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Server.API.Features.Authentication;
+namespace Server.API.Features.Authentication.Configs;
 
-public static class Authentication
+public static class TokenConfigs
 {
     public static void RegisterJwtPolicy(this IServiceCollection services, IConfiguration configs)
     {

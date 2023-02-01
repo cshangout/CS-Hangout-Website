@@ -1,21 +1,19 @@
-﻿using Server.Infrastructure.Entities.Users;
+﻿using Common.Models.Entities;
 
 namespace Server.Tests.TestData.Entities;
 
 public static class TestUser
 {
-    public static User GetTestUser(
-        int id = 1,
+    public static ApplicationUser GetTestUser(
         string username = "testUser",
         string email = "test@gmail.com",
-        string password = "password")
+        string password = "passwordHash")
     {
-        return new User()
+        return new ApplicationUser()
         {
-            Id = id,
             UserName = username,
             Email = email,
-            Password = password,
+            PasswordHash = password,
             CreatedDate = DateTime.Now,
             UpdatedDate = DateTime.Now.AddDays(1)
         };

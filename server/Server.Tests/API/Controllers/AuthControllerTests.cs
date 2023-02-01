@@ -1,11 +1,12 @@
 ﻿using System.Net;
 using System.Security;
+using Common.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Server.API.Controllers;
-using Server.API.DTOs;
+using Server.API.Features.Authentication.Registration;
+using Server.API.Features.Authentication.SignOn;
 using Server.Infrastructure.Data;
-using Server.Infrastructure.Entities.Users;
 using Server.Infrastructure.Mappers;
 using Server.Infrastructure.Repositories.Users;
 using Server.Tests.TestData.Dtos;
@@ -18,13 +19,17 @@ namespace Server.Tests.API.Controllers;
 public class AuthControllerTests
 {
     private Mock<ILogger> mockLogger;
-    private Mock<IUserRepository> mockUserRepository;
+    private Mock<ISignOnService> mockSignOnService;
+    private Mock<IRegistrationService> mockRegistrationService;
+    private Mock<IUserMapper> mockUserMapper;
 
     #region Setup
     public AuthControllerTests()
     {
         mockLogger = new Mock<ILogger>();
-        mockUserRepository = new Mock<IUserRepository>();
+        mockSignOnService = new Mock<ISignOnService>();
+        mockRegistrationService = new Mock<IRegistrationService>();
+        mockUserMapper = new Mock<IUserMapper>();
     }
 
     private void SetupMockLogger()
@@ -51,7 +56,11 @@ public class AuthControllerTests
 
     private AuthController GetTestController()
     {
-        return new AuthController(mockLogger.Object, mockUserRepository.Object);
+        return new AuthController(
+            mockLogger.Object, 
+            mockSignOnService.Object,
+            mockRegistrationService.Object,
+            mockUserMapper.Object);
     }
     #endregion
 
@@ -73,24 +82,28 @@ public class AuthControllerTests
         SetupMockLogger();
         var testLoginData = TestLoginDto.GetLoginDto(username: null);
         var testController = GetTestController();
-        var testValidReturnData = TestUser.GetTestUser();
+        var testValidReturnData = TestSignInResponseDto.GetTestSignInResponseDto();
 
-        mockUserRepository.Setup(
-                x => x.GetUserByEmail(It.IsAny<LoginDto>()))
+        mockSignOnService.Setup(x => x.SignOnOrchestrator(
+                It.IsAny<LoginRequestDto>()))
             .Returns(Task.FromResult(testValidReturnData))
             .Verifiable();
         
         // Act
-        var actionResult = await testController.AuthenticateUser(testLoginData);
+        var actionResult = await testController.SignOnUser(testLoginData);
         var result = actionResult.Result as OkObjectResult;
 
         // Assert
         actionResult.Result.Should().BeOfType<OkObjectResult>();
         actionResult.Result.Should().NotBeNull();
-        result.Value.Should().BeOfType<UserDto>();
+        result.Value.Should().BeOfType<SignInResponseDto>();
 
-        var resultData = result.Value as UserDto;
-        resultData.Username.Should().Be(testValidReturnData.UserName);
+        var resultData = result.Value as SignInResponseDto;
+        resultData.SuccessfulSignOn.Should().Be(true);
+        resultData.BearerToken.Should().Be(testValidReturnData.BearerToken);
+
+        mockSignOnService.Verify(x => x.SignOnOrchestrator(
+            It.IsAny<LoginRequestDto>()), Times.Once);
     }
     #endregion
     
@@ -101,10 +114,23 @@ public class AuthControllerTests
         // Arrange
         SetupMockLogger();
         var testUserData = TestRegisterDto.GetRegisterDto();
+        var testLoginUserDto = TestLoginDto.GetLoginDto();
+        var testSignInResponseData = TestSignInResponseDto.GetTestSignInResponseDto();
         var testController = GetTestController();
 
-        mockUserRepository.Setup(x => x.AddUser(It.IsAny<RegisterDto>()))
-            .Returns(Task.FromResult(TestUserDto.GetTestUserDto(testUserData.UserName)))
+        mockRegistrationService.Setup(x => x.RegistrationOrchestrator(
+                It.IsAny<RegisterRequestDto>()))
+            .Returns(Task.FromResult(true))
+            .Verifiable();
+
+        mockUserMapper.Setup(x => x.MapRegisterDtoToLoginDto(
+                It.IsAny<RegisterRequestDto>()))
+            .Returns(testLoginUserDto)
+            .Verifiable();
+        
+        mockSignOnService.Setup(x => x.SignOnOrchestrator(
+                It.IsAny<LoginRequestDto>()))
+            .Returns(Task.FromResult(testSignInResponseData))
             .Verifiable();
         
         // Act
@@ -114,10 +140,18 @@ public class AuthControllerTests
         // Assert
         actionResult.Result.Should().BeOfType<OkObjectResult>();
         actionResult.Result.Should().NotBeNull();
-        result.Value.Should().BeOfType<UserDto>();
+        result.Value.Should().BeOfType<SignInResponseDto>();
 
-        var resultData = result.Value as UserDto;
-        resultData.Username.Should().Be(testUserData.UserName);
+        var resultData = result.Value as SignInResponseDto;
+        resultData.SuccessfulSignOn.Should().Be(true);
+        resultData.BearerToken.Should().Be(testSignInResponseData.BearerToken);
+        
+        mockRegistrationService.Verify(x => x.RegistrationOrchestrator(
+            It.IsAny<RegisterRequestDto>()), Times.Once);
+        mockUserMapper.Verify(x => x.MapRegisterDtoToLoginDto(
+            It.IsAny<RegisterRequestDto>()), Times.Once);
+        mockSignOnService.Verify(x => x.SignOnOrchestrator(
+            It.IsAny<LoginRequestDto>()), Times.Once);
     }
     #endregion
 }

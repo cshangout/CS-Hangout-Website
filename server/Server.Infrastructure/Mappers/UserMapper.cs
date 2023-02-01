@@ -1,27 +1,36 @@
-﻿using Server.API.DTOs;
-using Server.Infrastructure.Entities;
-using Server.Infrastructure.Entities.Users;
+﻿using Common.Models.DTOs;
+using Common.Models.Entities;
 
 namespace Server.Infrastructure.Mappers;
 
 public class UserMapper : IUserMapper
 {
-    public User MapRegisterDtoToUser(RegisterDto registerDto)
+    public ApplicationUser MapRegisterDtoToUser(RegisterRequestDto registerRequestDto)
     {
-        return new User()
+        return new ApplicationUser()
         {
-            UserName = registerDto.UserName,
-            Email = registerDto.Email,
-            Password = registerDto.Password,
+            UserName = registerRequestDto.UserName,
+            Email = registerRequestDto.Email,
             UpdatedDate = null
         };
     }
 
-    public UserDto MapUserEntityToUserDto(User user)
+    // TODO: Fix mapper
+    public SignInResponseDto MapUserEntityToUserDto(ApplicationUser applicationUser)
     {
-        return new UserDto()
+        return new SignInResponseDto()
         {
-            Username = user.UserName
+            //Username = applicationUser.UserName
+        };
+    }
+
+    public LoginRequestDto MapRegisterDtoToLoginDto(RegisterRequestDto registerRequestDto)
+    {
+        return new LoginRequestDto()
+        {
+            Username = registerRequestDto.UserName,
+            Email = registerRequestDto.Email,
+            Password = registerRequestDto.Password
         };
     }
 }
