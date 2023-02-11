@@ -3,6 +3,7 @@ using System.Security;
 using Common.Interfaces;
 using Common.Models.DTOs;
 using Common.Models.Entities;
+using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -30,7 +31,9 @@ public class UserRepositoryTests
     {
         mockLogger = new Mock<ILogger>();
         mockDataContext = new Mock<IDataContext>();
-        mockUserManager = new Mock<UserManager<ApplicationUser>>();
+        mockUserManager = new Mock<UserManager<ApplicationUser>>(
+            Mock.Of<IUserStore<ApplicationUser>>(), 
+            null, null, null, null, null, null, null, null);
         mockUserMapper = new Mock<IUserMapper>();
     }
 
@@ -70,8 +73,67 @@ public class UserRepositoryTests
     public void UserRepository_Constructor_Returns_Instance_Of_UserRepository()
     {
         var testUserRepository = GetTestUserRepository();
-
         testUserRepository.Should().BeOfType<UserRepository>();
+    }
+    #endregion
+
+    #region Add User Test
+    [Fact]
+    public async Task UserRepository_Add_User_Returns_Registered_User_Results()
+    {
+        // Arrange
+        SetupMockLogger();
+        var testRegisterData = TestRegisterDto.GetRegisterDto();
+        var testUserRepository = GetTestUserRepository();
+        var testLoginUserDto = TestLoginDto.GetLoginDto();
+
+        mockUserMapper.Setup(x => x.MapRegisterDtoToLoginDto(
+        It.IsAny<RegisterRequestDto>()))
+            .Returns(testLoginUserDto)
+            .Verifiable();
+
+        // Act
+        var actionResult = testUserRepository.AddUser(testRegisterData).Result;
+
+        // Assert
+        actionResult.Succeeded.Should().BeTrue();
+
+    }
+    #endregion
+
+    #region Get Username Test
+    [Fact]
+    public async Task UserRepository_Get_Username_Returns_User()
+    {
+        // Arrange
+        SetupMockLogger();
+        var testLoginData = TestLoginDto.GetLoginDto();
+        var testUserRepository = GetTestUserRepository();
+
+        // Act
+        var actionResult = await testUserRepository.GetUserByUsername(testLoginData);
+
+        // Assert
+        actionResult.UserName.Should().Be("testUser");
+
+    }
+    #endregion
+
+    #region Get User Email Test
+    [Fact]
+    public async Task UserRepository_Get_User_Email_Returns_User_()
+    {
+        // Arrange
+        SetupMockLogger();
+        var testLoginData = TestLoginDto.GetLoginDto();
+        var testUserRepository = GetTestUserRepository();
+
+        // Act
+        var actionResult = await testUserRepository.GetUserByUsername(testLoginData);
+
+        // Assert
+        actionResult.Email.Should().Be("test@gmail.com");
+
     }
     #endregion
 }
