@@ -9,6 +9,7 @@ import {
     createBrowserRouter, RouterProvider
 } from "react-router-dom";
 import Register from "./Register/Register";
+import MainContainer from "./MainContainer/MainContainer";
 
 
 //creates routing for different pages of website.
@@ -19,6 +20,9 @@ const router = createBrowserRouter([
     }, {
         path: "/register",
         element: <Register />,
+    }, {
+        path: "/main",
+        element: <MainContainer/>,
     }
 ]);
 
